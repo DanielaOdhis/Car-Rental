@@ -10,7 +10,7 @@ function Cars() {
 
   const fetchCarData = async () => {
     try {
-      const response = await fetch('car.json')
+      const response = await fetch('./car.json')
       const data = await response.json();
       setCars(data);
     } catch (error) {
