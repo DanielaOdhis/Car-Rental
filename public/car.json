@@ -1,0 +1,172 @@
+[
+  {
+    "type": "Bugatti Chiron",
+    "location": "New York",
+    "owner_details": {
+      "name": "Aaaron",
+      "contacts": {
+        "email": "aaronh@gmail.com",
+        "tel": "+1234567890"
+      }
+    },
+    "image": "cars/buggattichiron.jpg",
+    "charges": {
+      "per_hour": "25$",
+      "per_day": "200$"
+    },
+    "Rental_status": "available"
+  },
+  {
+    "type": "Lamborghini Aventador",
+    "location": "Los Angeles",
+    "owner_details": {
+      "name": "John",
+      "contacts": {
+        "email": "johnmike@gmail.com",
+        "tel": "+9876543210"
+      }
+    },
+    "image": "cars/lamboaventador.jpg",
+    "charges": {
+      "per_hour": "30$",
+      "per_day": "250$"
+    },
+    "Rental_status": "available"
+  },
+  {
+    "type": "Ferrari 488 GTB",
+    "location": "Miami",
+    "owner_details": {
+      "name": "Sarah",
+      "contacts": {
+        "email": "sarahlikeri@gmail.com",
+        "tel": "+1122334455"
+      }
+    },
+    "image": "cars/ferrari488.jpg",
+    "charges": {
+      "per_hour": "20$",
+      "per_day": "180$"
+    },
+    "Rental_status": "unavailable"
+  },
+  {
+    "type": "Porsche 911",
+    "location": "Chicago",
+    "owner_details": {
+      "name": "David",
+      "contacts": {
+        "email": "davidoh@gmail.com",
+        "tel": "+9988776655"
+      }
+    },
+    "image": "cars/porsche911.jpg",
+    "charges": {
+      "per_hour": "15$",
+      "per_day": "150$"
+    },
+    "Rental_status": "available"
+  },
+  {
+    "type": "Mercedes-Benz S-Class",
+    "location": "San Francisco",
+    "owner_details": {
+      "name": "Emily",
+      "contacts": {
+        "email": "emilynh@gmail.com",
+        "tel": "+1122334455"
+      }
+    },
+    "image": "cars/mercedesbenzs.jpg",
+    "charges": {
+      "per_hour": "18$",
+      "per_day": "160$"
+    },
+    "Rental_status": "available"
+  },
+  {
+    "type": "Audi R8",
+    "location": "Las Vegas",
+    "owner_details": {
+      "name": "Michael",
+      "contacts": {
+        "email": "michaelheri@gmail.com",
+        "tel": "+9988776655"
+      }
+    },
+    "image": "cars/audir8.jpg",
+    "charges": {
+      "per_hour": "22$",
+      "per_day": "190$"
+    },
+    "Rental_status": "unavailable"
+  },
+  {
+    "type": "BMW M4",
+    "location": "Seattle",
+    "owner_details": {
+      "name": "Sophia",
+      "contacts": {
+        "email": "sophiahnge@gmail.com",
+        "tel": "+1122334455"
+      }
+    },
+    "image": "cars/bmwm4.jpg",
+    "charges": {
+      "per_hour": "16$",
+      "per_day": "170$"
+    },
+    "Rental_status": "available"
+  },
+  {
+    "type": "Tesla Model S",
+    "location": "Austin",
+    "owner_details": {
+      "name": "Daniel",
+      "contacts": {
+        "email": "austincc@gmail.com",
+        "tel": "+9988776655"
+      }
+    },
+    "image": "cars/teslamodels.jpg",
+    "charges": {
+      "per_hour": "20$",
+      "per_day": "180$"
+    },
+    "Rental_status": "available"
+  },
+  {
+    "type": "Chevrolet Camaro",
+    "location": "Denver",
+    "owner_details": {
+      "name": "Olivia",
+      "contacts": {
+        "email": "oliviamichael@gmail.com",
+        "tel": "+1122334455"
+      }
+    },
+    "image": "cars/chevroletcamaro.jpg",
+    "charges": {
+      "per_hour": "14$",
+      "per_day": "140$"
+    },
+    "Rental_status": "available"
+  },
+  {
+    "type": "Ford Mustang",
+    "location": "Atlanta",
+    "owner_details": {
+      "name": "Jacob",
+      "contacts": {
+        "email": "jacobhero@gmail.com",
+        "tel": "+9988776655"
+      }
+    },
+    "image": "cars/fordmustang.webp",
+    "charges": {
+      "per_hour": "15$",
+      "per_day": "150$"
+    },
+    "Rental_status": "unavailable"
+  }
+]
