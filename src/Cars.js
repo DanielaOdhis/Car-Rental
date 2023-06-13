@@ -12,11 +12,13 @@ function Cars({ onCarClick }) {
     try {
       const response = await fetch('/api/cars');
       const data = await response.json();
+      console.log(data); // Check if the data is received correctly
       setCars(data);
     } catch (error) {
       console.error('Error Fetching Data', error);
     }
   };
+
 
   return (
     <div>
