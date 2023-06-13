@@ -24,11 +24,11 @@ function Cars({ onCarClick }) {
       <div className='grid-container'>
         {cars.map((car, index) => (
           <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
-              <h2>{car.type}</h2>
-              <img src={process.env.PUBLIC_URL + '/' + car.image} alt={car.type} />
-              <p>Availability Status: {car.Rental_status}</p>
-              <p>Price per Hour: {car.charges.per_hour}</p>
-              <p>Price per Day: {car.charges.per_day}</p>
+            <h2>{car.Car_Type}</h2>
+            <img src={car.image} alt={car.Car_Type} />
+            <p>Availability Status: {car.Rental_Status}</p>
+            <p>Price per Hour: {car.Charges_Per_Hour}</p>
+            <p>Price per Day: {car.Charges_Per_Day}</p>
             <hr />
           </div>
         ))}

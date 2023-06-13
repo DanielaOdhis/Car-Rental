@@ -41,7 +41,7 @@ app.get('/api/cars/:id', (req, res) => {
   const carId = req.params.id;
 
   // Query the database
-  const query = 'SELECT * FROM cars WHERE id = ?';
+  const query = 'SELECT * FROM car_details WHERE id = ?';
   connection.query(query, [carId], (err, rows) => {
     if (err) {
       console.error('Error executing the query:', err);
