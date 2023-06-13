@@ -1,5 +1,8 @@
 const express = require('express');
-const mysql = require('mysql');
+const mysql = require('mysql2');
+const dotenv = require('dotenv');
+
+dotenv.config();
 
 const app = express();
 
@@ -10,6 +13,8 @@ const connection = mysql.createConnection({
   password: 'hellen2003',
   database: 'cars'
 });
+
+
 
 // Connect to the database
 connection.connect(err => {
@@ -61,6 +66,6 @@ app.get('/api/cars/:id', (req, res) => {
 });
 
 // Start the server
-app.listen(3001, () => {
-  console.log('Server is listening on port 3000');
+app.listen(3003, () => {
+  console.log('Server is listening on port 3003');
 });
