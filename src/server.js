@@ -1,10 +1,16 @@
 const express = require('express');
 const mysql = require('mysql2');
 const dotenv = require('dotenv');
+const cors = require('cors');
 
 dotenv.config();
 
 const app = express();
+
+// Enable CORS for all routes
+app.use(cors({
+  origin:'http://localhost:3000'
+}));
 
 // Create MySQL connection
 const connection = mysql.createConnection({
@@ -14,8 +20,6 @@ const connection = mysql.createConnection({
   database: 'cars'
 });
 
-
-
 // Connect to the database
 connection.connect(err => {
   if (err) {
@@ -24,6 +28,9 @@ connection.connect(err => {
   }
   console.log('Connected to the database!');
 });
+
+// Set CORS headers for specific routes
+app.use('/api/cars', cors());
 
 // Define a route to fetch all cars
 app.get('/api/cars', (req, res) => {

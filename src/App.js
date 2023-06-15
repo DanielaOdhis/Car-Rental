@@ -6,8 +6,8 @@ import CarDetails from './CarDetails.js';
 export default function App() {
   const [selectedCar, setSelectedCar] = useState(null);
 
-  const handleCarClick = (car) => {
-    setSelectedCar(car);
+  const handleCarClick = (cars) => {
+    setSelectedCar(cars);
   };
 
   const handleBackClick = () => {
@@ -17,7 +17,7 @@ export default function App() {
   return (
     <div>
       {selectedCar ? (
-        <CarDetails car={selectedCar} onBackClick={handleBackClick} />
+        <CarDetails cars={selectedCar} onBackClick={handleBackClick} />
       ) : (
         <Cars onCarClick={handleCarClick} />
       )}

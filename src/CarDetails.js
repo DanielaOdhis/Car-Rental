@@ -1,19 +1,19 @@
 import React from 'react';
 
-function CarDetails({ car, onBackClick }) {
+function CarDetails({ cars, onBackClick }) {
   return (
     <div>
-      {car ? (
+      {cars ? (
         <div class='selected-car-details'>
-          <h2>{car.type}</h2>
-          <img src={process.env.PUBLIC_URL + '/' + car.image} alt={car.type} />
-          <p>Availability Status: {car.Rental_status}</p>
-          <p>Price per Hour: {car.charges.per_hour}</p>
-          <p>Price per Day: {car.charges.per_day}</p>
-          <p>Location: {car.location}</p>
-          <p>Owner Name: {car.owner_details.name}</p>
-          <p>Email: {car.owner_details.contacts.email}</p>
-          <p>Telephone: {car.owner_details.contacts.tel}</p>
+          <h2>{cars.type}</h2>
+          <img src={process.env.PUBLIC_URL + '/' + cars.image} alt={cars.Car_Type} />
+          <p>Availability Status: {cars.Rental_Status}</p>
+          <p>Price per Hour: {cars.Charges_Per_Hour}</p>
+          <p>Price per Day: {cars.Charges_Per_Day}</p>
+          <p>Location: {cars.Location}</p>
+          <p>Owner Name: {cars.Owner_Name}</p>
+          <p>Email: {cars.Owner_Email}</p>
+          <p>Telephone: {cars.Owner_Telephone}</p>
           <button onClick={onBackClick}>Back</button>
         </div>
       ) : (
