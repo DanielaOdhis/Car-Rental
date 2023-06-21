@@ -9,7 +9,7 @@ const app = express();
 
 // Enable CORS for all routes
 app.use(cors({
-  origin:'http://localhost:3000'
+  origin: 'http://localhost:3000'
 }));
 
 // Create MySQL connection
@@ -28,9 +28,6 @@ connection.connect(err => {
   }
   console.log('Connected to the database!');
 });
-
-// Set CORS headers for specific routes
-app.use('/api/cars', cors());
 
 // Define a route to fetch all cars
 app.get('/api/cars', (req, res) => {
