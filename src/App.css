@@ -35,14 +35,38 @@ h1{
 .hidden {
     display: none;
   }
-button{
+  button {
+    align-items: center;
+    margin: 5px;
+    cursor: pointer;
+    border-radius: 8px;
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    -ms-border-radius: 8px;
+    -o-border-radius: 8px;
+    background-color: black;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+}
+
+  button:hover {
+    background-color: tomato;
+  }
+
+.signup-form,
+.login-form {
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  margin: 5px;
+  justify-content: center;
+  border: 1px solid #ccc;
   border-radius: 5px;
-  -webkit-border-radius: 5px;
-  -moz-border-radius: 5px;
-  -ms-border-radius: 5px;
-  -o-border-radius: 5px;
-  cursor: pointer;
+  padding: 20px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  max-width: 300px;
+  margin: 0 auto;
   font-size: 16px;
+  margin-top: 50px;
+  text-align: center;
 }
