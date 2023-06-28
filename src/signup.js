@@ -7,9 +7,18 @@ export default function Signup({ onSignUp }) {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
   const [phoneNumber, setPhoneNumber] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+
+    // Check if any field is empty
+    if (!username || !password || !email || !firstName || !lastName || !phoneNumber) {
+      setErrorMessage('Please fill in all fields.');
+      return;
+    }
+
     const userData = { username, email, password, firstName, lastName, phoneNumber };
 
     fetch('http://localhost:3004/api/signup', {
@@ -22,11 +31,15 @@ export default function Signup({ onSignUp }) {
       .then(response => response.json())
       .then(data => {
         console.log(data);
-        onSignUp();
+        onSignUp(email); // Pass the email value to the onSignUp function
       })
       .catch(error => {
         console.error('Error:', error);
       });
+  };
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
@@ -62,11 +75,20 @@ export default function Signup({ onSignUp }) {
         onChange={(e) => setEmail(e.target.value)}
       /><br /><br />
       <input
-        type="password"
+        type={showPassword ? 'text' : 'password'}
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       /><br /><br />
+      <div>
+        <input
+          type="checkbox"
+          checked={showPassword}
+          onChange={togglePasswordVisibility}
+        />
+        <label>Show Password</label>
+      </div>
+      {errorMessage && <p className="error">{errorMessage}</p>}
       <button type="submit">Signup</button>
     </form>
   );

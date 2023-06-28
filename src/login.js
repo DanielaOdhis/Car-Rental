@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 export default function Logins({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -15,18 +17,30 @@ export default function Logins({ onLogin }) {
       },
       body: JSON.stringify(loginData)
     })
-    .then(response => response.json())
+    .then(response => {
+      if (response.ok) {
+        return response.json();
+      } else {
+        throw new Error('Invalid credentials');
+      }
+    })
     .then(data => {
       console.log(data);
-      onLogin();
+      onLogin(email); // Pass the email value to the onLogin function
     })
     .catch(error => {
-      console.error('Error:', error);
+      console.error('Error:', error.message);
+      setError('No Account Found. Please try again.');
     });
   };
 
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <form  onSubmit={handleFormSubmit}>
+    <form onSubmit={handleFormSubmit}>
       <input
         type="email"
         placeholder="Email"
@@ -34,11 +48,20 @@ export default function Logins({ onLogin }) {
         onChange={(e) => setEmail(e.target.value)}
       /><br/><br/>
       <input
-        type="password"
+        type={showPassword ? "text" : "password"}
         placeholder="Password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       /><br/><br/>
+      <div>
+        <input
+          type="checkbox"
+          checked={showPassword}
+          onChange={togglePasswordVisibility}
+        />
+        <label>Show Password</label>
+      </div>
+      {error && <p className='error'>{error}</p>}
       <button type="submit">Login</button>
     </form>
   );
