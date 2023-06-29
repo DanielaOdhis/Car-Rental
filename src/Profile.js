@@ -1,27 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import React from 'react';
 
-export default function Profile({ userId, onBackClick, isLoggedIn, showProfilePage }) {
-  const [profileData, setProfileData] = useState(null);
-
-  useEffect(() => {
-    const fetchPerson = async () => {
-      try {
-        const response = await axios.get(`http://localhost:3004/api/userDetails?id=${encodeURIComponent(userId)}`);
-        setProfileData(response.data);
-        console.log('Profile data:', response);
-      } catch (error) {
-        console.error('Error fetching person:', error);
-      }
-    };
-    fetchPerson();
-  }, [userId]);
-
-  useEffect(() => {
-    if (!isLoggedIn || !showProfilePage) {
-      setProfileData(null);
-    }
-  }, [isLoggedIn, showProfilePage]);
+export default function Profile({ profileData, onBackClick }) {
 
   return (
     <div className='profile'>
@@ -41,4 +20,3 @@ export default function Profile({ userId, onBackClick, isLoggedIn, showProfilePa
     </div>
   );
 }
-

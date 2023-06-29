@@ -69,10 +69,10 @@ app.post('/api/login', (req, res) => {
   });
 });
 
-app.delete('/api/deleteAccount', (req, res) => {
-  const { username } = req.body;
-  const query = 'DELETE FROM users WHERE id = ?';
-  connection.query(query, [username], (err, result) => {
+app.delete('/api/deleteAccount/:email', (req, res) => {
+  const email = req.params.email;
+  const query = 'DELETE FROM users WHERE email = ?';
+  connection.query(query, email , (err, result) => {
     if (err) {
       console.error('Error deleting user account from the database:', err);
       res.status(500).json({ error: 'Error deleting user account from the database' });
@@ -94,9 +94,9 @@ app.get('/api/userDetails', (req, res) => {
   });
 });
 
-app.get('/api/userDetails/:id', (req, res) => {
-  const userId = req.params.id;
-  const query = 'SELECT username,email,password,firstName,lastName,phoneNumber FROM  users where id=?';
+app.get('/api/userDetails/:email', (req, res) => {
+  const userId = req.params.email;
+  const query = 'SELECT username,email,password,firstName,lastName,phoneNumber FROM users where email=?';
   connection.query(query, [userId], (err, result) => {
     if (err) {
       console.error('Error fetching user details from the database:', err);

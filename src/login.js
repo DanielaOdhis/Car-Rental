@@ -8,6 +8,10 @@ export default function Logins({ onLogin }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
+    const formData = {
+      email: email,
+    };
+    onLogin(formData);
     const loginData = { email, password };
 
     fetch('http://localhost:3004/api/login', {
@@ -26,7 +30,7 @@ export default function Logins({ onLogin }) {
     })
     .then(data => {
       console.log(data);
-      onLogin(email); // Pass the email value to the onLogin function
+      onLogin(email);
     })
     .catch(error => {
       console.error('Error:', error.message);

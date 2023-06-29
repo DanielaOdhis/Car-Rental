@@ -12,7 +12,10 @@ export default function Signup({ onSignUp }) {
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
-
+    const formData = {
+      email: email,
+    };
+    onSignUp(formData);
     // Check if any field is empty
     if (!username || !password || !email || !firstName || !lastName || !phoneNumber) {
       setErrorMessage('Please fill in all fields.');
