@@ -13,7 +13,6 @@ export default function App() {
   const [selectedCar, setSelectedCar] = useState(null);
   const [showLoginForm, setShowLoginForm] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loginError, setLoginError] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfilePage, setShowProfilePage] = useState(false);
   const [user, setUser] = useState({ email: '' });
@@ -56,12 +55,6 @@ export default function App() {
       onLogin(formData.email);
     } catch (error) {
       console.error('Error fetching user:', error);
-      setIsLoggedIn(false);
-      setSelectedCar(null);
-      setShowLoginForm(true);
-      setUser(null);
-      setProfileData(null);
-      setLoginError(true);
     }
   };
 
@@ -130,16 +123,15 @@ export default function App() {
   if (!isLoggedIn) {
     return (
       <div>
-      {showLoginForm ? (
-        <div className="login-form">
-          <h1>Login</h1>
-          {loginError && <p>Error logging in. Please try again.</p>}
-          <Login onLogin={handleLogin} />
-          <p>
-            Don't have an account?{' '}
-            <button onClick={() => setShowLoginForm(false)}>Sign up</button>
-          </p>
-        </div>
+        {showLoginForm ? (
+          <div className="login-form">
+            <h1>Login</h1>
+            <Login onLogin={handleLogin} />
+            <p>
+              Don't have an account?{' '}
+              <button onClick={() => setShowLoginForm(false)}>Sign up</button>
+            </p>
+          </div>
         ) : (
           <div className="signup-form">
             <h1>Sign Up</h1>
