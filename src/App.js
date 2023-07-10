@@ -8,6 +8,8 @@ import Login from './login.js';
 import Settings from './Settings.js';
 import Profile from './Profile.js';
 import axios from 'axios';
+import BookingDialog from './Booking.js';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
 export default function App() {
   const [selectedCar, setSelectedCar] = useState(null);
@@ -17,10 +19,14 @@ export default function App() {
   const [showProfilePage, setShowProfilePage] = useState(false);
   const [user, setUser] = useState({ email: '' });
   const [profileData, setProfileData] = useState(null);
+  const [paymentOption, setPaymentOption] = useState('');
+  const [totalBill, setTotalBill] = useState(0);
+  const [isBookingClicked, setIsBookingClicked] = useState(false);
 
   const handleCarClick = (car) => {
     setSelectedCar(car);
     setShowProfilePage(false);
+    setIsBookingClicked(false);
   };
 
   const handleBackClick = () => {
@@ -87,10 +93,7 @@ export default function App() {
           handleLogout();
         })
         .catch((error) => {
-          console.error(
-            'Error deleting user account:',
-            error.response.data
-          );
+          console.error('Error deleting user account:', error.response.data);
         });
     } catch (error) {
       console.error('Error deleting user account:', error);
@@ -120,6 +123,34 @@ export default function App() {
     console.log('User logged in:', email);
   };
 
+  const handlePayInPerson = (total) => {
+    console.log('Pay in Person:', total);
+    setPaymentOption('inPerson');
+    setTotalBill(total);
+  };
+
+  const handlePayViaApp = (total) => {
+    console.log('Pay via App:', total);
+    setPaymentOption('viaApp');
+    setTotalBill(total);
+  };
+
+  const handleCheckoutComplete = () => {
+    setSelectedCar(null);
+    setIsBookingClicked(false);
+    setPaymentOption('');
+    setTotalBill(0);
+  };
+
+  const handleBookingClick = () => {
+    setIsBookingClicked(true);
+  }
+  const initialOptions = {
+    clientId: "AUqD0H3D-HyokMyCUcOhHvV7sL9qrjFmPVVPTw6WsVaXyTlwhqEgjQF4KAOUz6jQGQP8gFoRKP65gm9e",
+    currency: "USD",
+    intent: "capture",
+  };
+
   if (!isLoggedIn) {
     return (
       <div>
@@ -128,8 +159,7 @@ export default function App() {
             <h1>Login</h1>
             <Login onLogin={handleLogin} />
             <p>
-              Don't have an account?{' '}
-              <button onClick={() => setShowLoginForm(false)}>Sign up</button>
+              Don't have an account? <button onClick={() => setShowLoginForm(false)}>Sign up</button>
             </p>
           </div>
         ) : (
@@ -137,8 +167,7 @@ export default function App() {
             <h1>Sign Up</h1>
             <Signup onSignUp={handleSignup} />
             <p>
-              Already have an account?{' '}
-              <button onClick={() => setShowLoginForm(true)}>Login</button>
+              Already have an account? <button onClick={() => setShowLoginForm(true)}>Login</button>
             </p>
           </div>
         )}
@@ -148,10 +177,79 @@ export default function App() {
     if (selectedCar && !showProfilePage) {
       return (
         <div>
-          <CarDetails cars={selectedCar} onBackClick={handleBackClick} />
+            <div>
+              <CarDetails cars={selectedCar} onBackClick={handleBackClick} />
+              {!isBookingClicked && (
+            <BookingDialog
+              onPayInPerson={handlePayInPerson}
+              onPayViaApp={handlePayViaApp}
+              hourlyRate={selectedCar.Charges_Per_Hour}
+              dailyRate={selectedCar.Charges_Per_Day}
+              onBookingClick={handleBookingClick}
+            />
+          )}
+              {isBookingClicked && paymentOption === 'viaApp' && totalBill > 0 && (
+                <div>
+                  <h2>Total Bill: {totalBill}$</h2>
+                  <PayPalScriptProvider options={initialOptions}>
+                    <PayPalButtons
+                      createOrder={(data, actions) => {
+                        return actions.order.create({
+                          purchase_units: [
+                            {
+                              amount: {
+                                currency_code: "USD",
+                                value: totalBill,
+                              },
+                            },
+                          ],
+                        });
+                      }}
+                      onApprove={(data, actions) => {
+                        return actions.order.capture().then((details) => {
+                          console.log("Payment completed:", details);
+                          handleCheckoutComplete();
+                        });
+                      }}
+                    />
+                  </PayPalScriptProvider>
+                </div>
+              )}
+            </div>
+
+          {showProfilePage && (
+            <div>
+              <Profile
+                user={user}
+                profileData={profileData}
+                isLoggedIn={isLoggedIn}
+                showProfilePage={showProfilePage}
+                onBackClick={handleBackClick}
+              />
+            </div>
+          )}
+          {!selectedCar && !showProfilePage && (
+            <div>
+              <Cars onCarClick={handleCarClick} />
+              <div className="settings-button" id="settings-button">
+                <button onClick={() => setShowSettings(!showSettings)}>
+                  <img src={setting} alt="Settings" />
+                </button>
+                {showSettings && (
+                  <Settings
+                    onLogout={handleLogout}
+                    onProfileClick={handleProfileClick}
+                    onDeleteAccount={() => handleDeleteAccount(user.email)}
+                    user={user}
+                  />
+                )}
+              </div>
+            </div>
+          )}
         </div>
       );
-    } else if (showProfilePage) {
+    }
+      else if (showProfilePage) {
       return (
         <div>
           <Profile

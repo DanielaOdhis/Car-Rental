@@ -35,7 +35,6 @@ app.get('/api', (req, res) => {
 
 app.post('/api/signup', (req, res) => {
   const { username, email, password, firstName, lastName, phoneNumber } = req.body;
-  console.log('Signup data:', req.body);
   const query = 'INSERT INTO users (username, email, password, firstName, lastName, phoneNumber) VALUES (?, ?, ?, ?, ?, ?)';
   connection.query(query, [username, email, password, firstName, lastName, phoneNumber], (err, result) => {
     if (err) {

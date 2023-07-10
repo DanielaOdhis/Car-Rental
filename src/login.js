@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-
 export default function Logins({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -70,3 +69,4 @@ export default function Logins({ onLogin }) {
     </form>
   );
 }
+
