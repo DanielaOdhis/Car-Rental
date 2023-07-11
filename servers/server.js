@@ -14,10 +14,10 @@ app.use(cors({
 
 // Create MySQL connection
 const connection = mysql.createConnection({
-  host: 'localhost',
-  user: 'root',
-  password: 'hellen2003',
-  database: 'cars'
+  host:process.env.HOST,
+  user:process.env.USER,
+  database:process.env.DATABASE,
+  password:process.env.PASSWORD
 });
 
 // Connect to the database

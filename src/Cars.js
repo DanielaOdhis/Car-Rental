@@ -19,17 +19,20 @@ function Cars({ onCarClick }) {
   };
 
   const bufferToBase64 = (buffer) => {
-    if (!buffer || !buffer.data) {
+    if (!buffer || !buffer.data || buffer.data.length === 0) {
       return '';
     }
-
-    const bytes = new Uint8Array(buffer.data);
-    const binary = bytes.reduce((str, byte) => str + String.fromCharCode(byte), '');
-    const type = buffer.type.split('/')[1]; // Extract the file format from the MIME type
-    const base64String = window.btoa(binary);
+  
+    const binary = Array.prototype.map
+      .call(new Uint8Array(buffer.data), (byte) => String.fromCharCode(byte))
+      .join('');
+  
+    const base64String = btoa(binary);
+  
+    const type = buffer.type ? buffer.type.split('/')[1] : '';
     return `data:image/${type};base64,${base64String}`;
   };
-
+  
   return (
     <div>
       <h1>Car Rental</h1>
