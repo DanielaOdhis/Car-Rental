@@ -1,4 +1,5 @@
 import React from 'react';
+import Update from './Update.js';
 
 export default function Profile({ profileData, onBackClick }) {
 
@@ -17,6 +18,8 @@ export default function Profile({ profileData, onBackClick }) {
         <p>Loading profile data...</p>
       )}
       <button onClick={onBackClick}>Back</button>
+      <hr/>
+      <Update/>
     </div>
   );
 }

@@ -46,7 +46,6 @@ function Cars({ onCarClick }) {
       <h1>Car Rental</h1>
       <div className='grid-container'>
         {cars.map((car, index) => {
-          console.log(car.image); // Log the buffer data for debugging
           return (
             <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
               <h2>{car.Car_Type}</h2>
