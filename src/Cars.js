@@ -9,7 +9,7 @@ function Cars({ onCarClick }) {
 
   const fetchCarData = async () => {
     try {
-      const response = await fetch('http://localhost:3003/api/cars');
+      const response = await fetch('http://localhost:3004/api/cars');
       const data = await response.json();
       console.log(data); // Check if the data is received correctly
       setCars(data);
@@ -18,35 +18,49 @@ function Cars({ onCarClick }) {
     }
   };
 
-  const bufferToBase64 = (buffer) => {
+  /*const bufferToBase64 = (buffer) => {
     if (!buffer || !buffer.data || buffer.data.length === 0) {
       return '';
     }
-  
-    const binary = Array.prototype.map
-      .call(new Uint8Array(buffer.data), (byte) => String.fromCharCode(byte))
-      .join('');
-  
+
+    const binary = buffer.data.reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ''
+    );
+
     const base64String = btoa(binary);
-  
-    const type = buffer.type ? buffer.type.split('/')[1] : '';
-    return `data:image/${type};base64,${base64String}`;
+
+    return `data:${buffer.type};base64,${base64String}`;
+  };*/
+
+  const convertBufferToBase64 = (buffer) => {
+    const binary = new Uint8Array(buffer.data).reduce(
+      (data, byte) => data + String.fromCharCode(byte),
+      ''
+    );
+    return window.btoa(binary);
   };
-  
+
   return (
     <div>
       <h1>Car Rental</h1>
       <div className='grid-container'>
-        {cars.map((car, index) => (
-          <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
-            <h2>{car.Car_Type}</h2>
-            <img src={bufferToBase64(car.image)} alt={car.Car_Type} />
-            <p>Availability Status: {car.Rental_Status}</p>
-            <p>Price per Hour: {car.Charges_Per_Hour}$</p>
-            <p>Price per Day: {car.Charges_Per_Day}$</p>
-            <hr />
-          </div>
-        ))}
+        {cars.map((car, index) => {
+          console.log(car.image); // Log the buffer data for debugging
+          return (
+            <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
+              <h2>{car.Car_Type}</h2>
+              <img
+                src={`data:${car.image.type};base64,${convertBufferToBase64(car.image)}`}
+                alt={car.Car_Type}
+              />
+              <p>Availability Status: {car.Rental_Status}</p>
+              <p>Price per Hour: {car.Charges_Per_Hour}$</p>
+              <p>Price per Day: {car.Charges_Per_Day}$</p>
+              <hr />
+            </div>
+          );
+        })}
       </div>
     </div>
   );

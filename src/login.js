@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import axios from 'axios';
+
 export default function Logins({ onLogin }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -10,6 +12,10 @@ export default function Logins({ onLogin }) {
     const formData = {
       email: email,
     };
+    axios.post('http://localhost:3004/api/login', {email, password})
+    .then((response) => {console.log(response.data); onLogin(formData);})
+    .catch((error) => {console.log(error); setError('No Account Found. Please try again.');});
+    /*
     onLogin(formData);
     const loginData = { email, password };
 
@@ -34,7 +40,7 @@ export default function Logins({ onLogin }) {
     .catch(error => {
       console.error('Error:', error.message);
       setError('No Account Found. Please try again.');
-    });
+    });*/
   };
 
 
@@ -69,4 +75,3 @@ export default function Logins({ onLogin }) {
     </form>
   );
 }
-
