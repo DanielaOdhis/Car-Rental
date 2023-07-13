@@ -33,14 +33,20 @@ function Cars({ onCarClick }) {
     return `data:${buffer.type};base64,${base64String}`;
   };*/
 
-  const convertBufferToBase64 = (buffer) => {
-    const binary = new Uint8Array(buffer.data).reduce(
+  const bufferToBase64 = (buffer) => {
+    if (!buffer || !buffer.data || buffer.data.length === 0) {
+      return '';
+    }
+  
+    const binary = buffer.data.reduce(
       (data, byte) => data + String.fromCharCode(byte),
       ''
     );
-    return window.btoa(binary);
+  
+    const base64String = btoa(binary);
+  
+    return `data:${buffer.type};base64,${base64String}`;
   };
-
   return (
     <div>
       <h1>Car Rental</h1>
@@ -50,9 +56,9 @@ function Cars({ onCarClick }) {
             <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
               <h2>{car.Car_Type}</h2>
               <img
-                src={`data:${car.image.type};base64,${convertBufferToBase64(car.image)}`}
-                alt={car.Car_Type}
-              />
+  src={bufferToBase64(car.image)}
+  alt={car.Car_Type}
+/>
               <p>Availability Status: {car.Rental_Status}</p>
               <p>Price per Hour: {car.Charges_Per_Hour}$</p>
               <p>Price per Day: {car.Charges_Per_Day}$</p>

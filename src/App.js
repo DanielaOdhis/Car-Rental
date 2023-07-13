@@ -87,7 +87,7 @@ export default function App() {
   const handleDeleteAccount = () => {
     try {
       axios
-        .delete(`http://localhost:3004/api/deleteAccount/${user.email}`)
+        .delete(`http://localhost:3004/api/userDetails/${user.email}`)
         .then((response) => {
           console.log(response.data);
           handleLogout();
