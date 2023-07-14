@@ -15,32 +15,6 @@ export default function Logins({ onLogin }) {
     axios.post('http://localhost:3004/api/login', {email, password})
     .then((response) => {console.log(response.data); onLogin(formData);})
     .catch((error) => {console.log(error); setError('No Account Found. Please try again.');});
-    /*
-    onLogin(formData);
-    const loginData = { email, password };
-
-    fetch('http://localhost:3004/api/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(loginData)
-    })
-    .then(response => {
-      if (response.ok) {
-        return response.json();
-      } else {
-        throw new Error('Invalid credentials');
-      }
-    })
-    .then(data => {
-      console.log(data);
-      onLogin(email);
-    })
-    .catch(error => {
-      console.error('Error:', error.message);
-      setError('No Account Found. Please try again.');
-    });*/
   };
 
 
