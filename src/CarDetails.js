@@ -1,19 +1,23 @@
 import React, { useState } from 'react';
 import BookingDialog from './Booking.js';
 
-function CarDetails({ cars, onBackClick }) {
+function CarDetails({ cars, onBackClick, userId }) {
   const [isBookingClicked, setIsBookingClicked] = useState(false);
+  const [showBookingDialog, setShowBookingDialog] = useState(false);
 
   const handleBookClick = () => {
     setIsBookingClicked(true);
+    setShowBookingDialog(true);
   };
 
   const handlePayInPerson = () => {
     setIsBookingClicked(false);
+    setShowBookingDialog(false);
   };
 
   const handlePayViaApp = () => {
     setIsBookingClicked(true);
+    setShowBookingDialog(true);
   };
 
   const bufferToBase64 = (buffer) => {
@@ -43,19 +47,21 @@ function CarDetails({ cars, onBackClick }) {
           <p>Telephone: {cars.Owner_Telephone}</p>
           <button onClick={onBackClick}>Back</button>
           <button onClick={handleBookClick}>Book</button>
-          {isBookingClicked && (
-            <BookingDialog
-              onPayInPerson={handlePayInPerson}
-              onPayViaApp={handlePayViaApp}
-              hourlyRate={cars.Charges_Per_Hour}
-              dailyRate={cars.Charges_Per_Day}
-              onBookingClick={handleBookClick}
-              isBookingClicked={isBookingClicked}
-            />
-          )}
         </div>
       ) : (
         <p>Loading...</p>
+      )}
+      {showBookingDialog && (
+        <BookingDialog
+          onPayInPerson={handlePayInPerson}
+          onPayViaApp={handlePayViaApp}
+          hourlyRate={cars.Charges_Per_Hour}
+          dailyRate={cars.Charges_Per_Day}
+          onBookingClick={handleBookClick}
+          isBookingClicked={isBookingClicked}
+          carId={cars.Car_ID}
+          userId={userId}
+        />
       )}
     </div>
   );

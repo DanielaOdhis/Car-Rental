@@ -10,6 +10,7 @@ import Profile from './Profile.js';
 import axios from 'axios';
 import BookingDialog from './Booking.js';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import BookedCars from './BookedCars.js';
 
 export default function App() {
   const [selectedCar, setSelectedCar] = useState(null);
@@ -22,6 +23,7 @@ export default function App() {
   const [paymentOption, setPaymentOption] = useState('');
   const [totalBill, setTotalBill] = useState(0);
   const [isBookingClicked, setIsBookingClicked] = useState(false);
+  const [showBookedCars, setShowBookedCars] = useState(false);
 
   const handleCarClick = (car) => {
     setSelectedCar(car);
@@ -32,6 +34,7 @@ export default function App() {
   const handleBackClick = () => {
     setSelectedCar(null);
     setShowProfilePage(false);
+    setShowBookedCars(false);
   };
 
   const handleSignup = async (formData) => {
@@ -145,6 +148,13 @@ export default function App() {
   const handleBookingClick = () => {
     setIsBookingClicked(true);
   }
+
+  const handleBookedCarsClick = () => {
+    setShowBookedCars(true);
+    setSelectedCar(null);
+    setShowProfilePage(false);
+  };
+
   const initialOptions = {
     clientId: "AUqD0H3D-HyokMyCUcOhHvV7sL9qrjFmPVVPTw6WsVaXyTlwhqEgjQF4KAOUz6jQGQP8gFoRKP65gm9e",
     currency: "USD",
@@ -174,48 +184,48 @@ export default function App() {
       </div>
     );
   } else {
-    if (selectedCar && !showProfilePage) {
+    if (selectedCar && !showProfilePage && !showBookedCars) {
       return (
         <div>
-            <div>
-              <CarDetails cars={selectedCar} onBackClick={handleBackClick} />
-              {!isBookingClicked && (
-            <BookingDialog
-              onPayInPerson={handlePayInPerson}
-              onPayViaApp={handlePayViaApp}
-              hourlyRate={selectedCar.Charges_Per_Hour}
-              dailyRate={selectedCar.Charges_Per_Day}
-              onBookingClick={handleBookingClick}
-            />
-          )}
-              {isBookingClicked && paymentOption === 'viaApp' && totalBill > 0 && (
-                <div>
-                  <h2>Total Bill: {totalBill}$</h2>
-                  <PayPalScriptProvider options={initialOptions}>
-                    <PayPalButtons
-                      createOrder={(data, actions) => {
-                        return actions.order.create({
-                          purchase_units: [
-                            {
-                              amount: {
-                                currency_code: "USD",
-                                value: totalBill,
-                              },
+          <div>
+            <CarDetails cars={selectedCar} onBackClick={handleBackClick} userId={user.id} />
+            {!isBookingClicked && (
+              <BookingDialog
+                onPayInPerson={handlePayInPerson}
+                onPayViaApp={handlePayViaApp}
+                hourlyRate={selectedCar.Charges_Per_Hour}
+                dailyRate={selectedCar.Charges_Per_Day}
+                onBookingClick={handleBookingClick}
+              />
+            )}
+            {isBookingClicked && paymentOption === 'viaApp' && totalBill > 0 && (
+              <div>
+                <h2>Total Bill: {totalBill}$</h2>
+                <PayPalScriptProvider options={initialOptions}>
+                  <PayPalButtons
+                    createOrder={(data, actions) => {
+                      return actions.order.create({
+                        purchase_units: [
+                          {
+                            amount: {
+                              currency_code: "USD",
+                              value: totalBill,
                             },
-                          ],
-                        });
-                      }}
-                      onApprove={(data, actions) => {
-                        return actions.order.capture().then((details) => {
-                          console.log("Payment completed:", details);
-                          handleCheckoutComplete();
-                        });
-                      }}
-                    />
-                  </PayPalScriptProvider>
-                </div>
-              )}
-            </div>
+                          },
+                        ],
+                      });
+                    }}
+                    onApprove={(data, actions) => {
+                      return actions.order.capture().then((details) => {
+                        console.log("Payment completed:", details);
+                        handleCheckoutComplete();
+                      });
+                    }}
+                  />
+                </PayPalScriptProvider>
+              </div>
+            )}
+          </div>
 
           {showProfilePage && (
             <div>
@@ -228,7 +238,8 @@ export default function App() {
               />
             </div>
           )}
-          {!selectedCar && !showProfilePage && (
+
+          {!selectedCar && !showProfilePage && !showBookedCars && (
             <div>
               <Cars onCarClick={handleCarClick} />
               <div className="settings-button" id="settings-button">
@@ -240,6 +251,7 @@ export default function App() {
                     onLogout={handleLogout}
                     onProfileClick={handleProfileClick}
                     onDeleteAccount={() => handleDeleteAccount(user.email)}
+                    onBookedClick={handleBookedCarsClick}
                     user={user}
                   />
                 )}
@@ -248,8 +260,7 @@ export default function App() {
           )}
         </div>
       );
-    }
-      else if (showProfilePage) {
+    } else if (showProfilePage && !showBookedCars) {
       return (
         <div>
           <Profile
@@ -259,6 +270,12 @@ export default function App() {
             showProfilePage={showProfilePage}
             onBackClick={handleBackClick}
           />
+        </div>
+      );
+    } else if (showBookedCars) {
+      return (
+        <div>
+          <BookedCars user={user} onBackClick={handleBackClick} />
         </div>
       );
     } else {
@@ -276,6 +293,7 @@ export default function App() {
                 onLogout={handleLogout}
                 onProfileClick={handleProfileClick}
                 onDeleteAccount={() => handleDeleteAccount(user.email)}
+                onBookedClick={handleBookedCarsClick}
                 user={user}
               />
             )}
