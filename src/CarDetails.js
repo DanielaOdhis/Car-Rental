@@ -1,24 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import BookingDialog from './Booking.js';
 
-function CarDetails({ cars, onBackClick, userId }) {
-  const [isBookingClicked, setIsBookingClicked] = useState(false);
+export default function CarDetails({ cars, onBackClick, userId, profileData }) {
+  const [ownerDetails, setOwnerDetails] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
+  const [isBookingClicked, setIsBookingClicked] = useState(false); // Add this line
 
-  const handleBookClick = () => {
-    setIsBookingClicked(true);
-    setShowBookingDialog(true);
+  const fetchOwnerDetails = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3004/api/ownerDetails/${cars.owner_ID}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (response.data) {
+        setOwnerDetails(response.data);
+      }
+    } catch (error) {
+      console.error('Error fetching owner details:', error);
+    }
   };
 
-  const handlePayInPerson = () => {
-    setIsBookingClicked(false);
-    setShowBookingDialog(false);
-  };
-
-  const handlePayViaApp = () => {
-    setIsBookingClicked(true);
-    setShowBookingDialog(true);
-  };
+  useEffect(() => {
+    fetchOwnerDetails();
+  },);
 
   const bufferToBase64 = (buffer) => {
     if (!buffer || !buffer.data) {
@@ -32,6 +39,16 @@ function CarDetails({ cars, onBackClick, userId }) {
     return `data:image/${type};base64,${base64String}`;
   };
 
+  const handleBackClick = () => {
+    setShowBookingDialog(false);
+    onBackClick();
+  };
+
+  const handleBookingClick = () => {
+    setShowBookingDialog(true);
+    setIsBookingClicked(false); // Reset the isBookingClicked state
+  };
+
   return (
     <div>
       {cars ? (
@@ -42,29 +59,31 @@ function CarDetails({ cars, onBackClick, userId }) {
           <p>Price per Hour: {cars.Charges_Per_Hour}$</p>
           <p>Price per Day: {cars.Charges_Per_Day}$</p>
           <p>Location: {cars.Location}</p>
-          <p>Owner Name: {cars.Owner_Name}</p>
-          <p>Email: {cars.Owner_Email}</p>
-          <p>Telephone: {cars.Owner_Telephone}</p>
-          <button onClick={onBackClick}>Back</button>
-          <button onClick={handleBookClick}>Book</button>
+          {ownerDetails && (
+            <div>
+              <h2>Owner Details</h2>
+              <p>Owner Name: {ownerDetails.firstName}</p>
+              <p>Email: {ownerDetails.email}</p>
+              <p>Telephone: {ownerDetails.phoneNumber}</p>
+            </div>
+          )}
+          <button onClick={handleBackClick}>Back</button>
+          <button onClick={handleBookingClick}>Book</button>
         </div>
       ) : (
         <p>Loading...</p>
       )}
       {showBookingDialog && (
         <BookingDialog
-          onPayInPerson={handlePayInPerson}
-          onPayViaApp={handlePayViaApp}
           hourlyRate={cars.Charges_Per_Hour}
           dailyRate={cars.Charges_Per_Day}
-          onBookingClick={handleBookClick}
-          isBookingClicked={isBookingClicked}
           carId={cars.Car_ID}
-          userId={userId}
+          profileData={profileData}
+          carData={cars}
+          onBookingClick={handleBookingClick}
+          isBookingClicked={isBookingClicked} // Pass isBookingClicked as a prop
         />
       )}
     </div>
   );
 }
-
-export default CarDetails;

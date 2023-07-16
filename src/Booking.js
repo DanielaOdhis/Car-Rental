@@ -2,11 +2,12 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
-export default function BookingDialog({ onPayInPerson, onPayViaApp, hourlyRate, dailyRate, onBookingClick, isBookingClicked, carId, userId }) {
+export default function BookingDialog({ hourlyRate, dailyRate, carId, profileData, carData, onBookingClick, isBookingClicked }) {
   const [paymentOption, setPaymentOption] = useState('');
   const [totalBill, setTotalBill] = useState(0);
   const [pickupTime, setPickupTime] = useState('');
   const [bookingDate, setBookingDate] = useState('');
+  const [showPaymentOptions, setShowPaymentOptions] = useState(false); // New state variable
 
   const handleOptionChange = (event) => {
     const selectedOption = event.target.value;
@@ -19,10 +20,6 @@ export default function BookingDialog({ onPayInPerson, onPayViaApp, hourlyRate, 
     }
   };
 
-  const handlePayInPerson = () => {
-    onPayInPerson(totalBill);
-  };
-
   const handleCheckoutComplete = () => {
     setPaymentOption('');
     setTotalBill(0);
@@ -32,59 +29,95 @@ export default function BookingDialog({ onPayInPerson, onPayViaApp, hourlyRate, 
     setPaymentOption('');
   };
 
-  const handleBookClick = () => {
-    if (!pickupTime || !bookingDate || !carId || !userId) {
+  const handleBookClick = async () => {
+    if (!pickupTime || !bookingDate) {
       console.error('Missing required data for booking');
       return;
     }
+
+    const formData = new FormData();
+    formData.append('pickup_time', pickupTime);
+    formData.append('user_id', profileData.id);
+    formData.append('booking_date', bookingDate);
+    formData.append('car_id', carData.Car_ID);
   
-    const formData = {
-      pickup_time: `${bookingDate} ${pickupTime}:00`, // Combine date and time values
-      booking_date: bookingDate,
-      car_id: carId,
-      user_id: userId,
-    };
-  
-    axios.post('http://localhost:3004/api/bookings', formData)
-      .then((response) => {
-        console.log(response.data);
-        onBookingClick();
-      })
-      .catch((error) => {
-        console.error('Error creating booking:', error.response.data);
+    try {
+      const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${profileData.id}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
       });
-  };
   
+      const carResponse = await axios.get(`http://localhost:3004/api/cars/${carData.owner_ID}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+  
+      const user = userResponse.data;
+      const car = carResponse.data;
+      console.log('profileData:', profileData);
+    console.log('carData:', carData);
+      
+      if (!user || !user.id) {
+        console.error('Invalid user data:', user);
+        return;
+      }
+  
+      if (!car || !car.Car_ID) {
+        console.error('Invalid car data:', car);
+        return;
+      }
+
+      formData.append('user_id', user.id);
+      formData.append('car_id', car.Car_ID);
+
+      const formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
+  
+      axios.post('http://localhost:3004/api/bookings',  {
+        pickup_time: formattedPickupTime,
+        user_id: profileData.id,
+        booking_date: bookingDate,
+        car_id: carData.Car_ID
+      })
+        .then((response) => {
+          console.log(response.data);
+          onBookingClick(); // Call the onBookingClick callback
+          setPaymentOption('paypal'); // Set paymentOption state to 'paypal'
+          setShowPaymentOptions(true); // Set showPaymentOptions state to true
+        })
+        .catch((error) => {
+          console.error('Error creating booking:', error.response.data);
+        });
+    } catch (error) {
+      console.error('Error fetching user or car details:', error);
+    }}
 
   return (
     <div>
-      {!isBookingClicked && (
+      {!isBookingClicked && !showPaymentOptions && (
         <div className='pay'>
-          <label>
-            Pickup Time:
-            <input
-              type="time"
-              value={pickupTime}
-              onChange={(e) => setPickupTime(e.target.value)}
-            />
-          </label>
-          <br />
-          <label>
-            Booking Date:
-            <input
-              type="date"
-              value={bookingDate}
-              onChange={(e) => setBookingDate(e.target.value)}
-            />
-          </label>
-          <br />
-          <button onClick={handleBookClick}>Book</button>
-        </div>
-      )}
-
-      {isBookingClicked && !paymentOption && (
-        <div className='pay'>
-          <h3>Select Payment Option:</h3>
+          <div>
+            <label>
+              Pickup Time:
+              <input
+                type="time"
+                value={pickupTime}
+                onChange={(e) => setPickupTime(e.target.value)}
+              />
+            </label>
+            <br /> <br />
+            <label>
+              Booking Date:
+              <input
+                type="date"
+                value={bookingDate}
+                onChange={(e) => setBookingDate(e.target.value)}
+              />
+            </label>
+            <br />
+          </div>
+          <h3>Select Rates Option:</h3>
           <label>
             <input
               type="radio"
@@ -102,41 +135,10 @@ export default function BookingDialog({ onPayInPerson, onPayViaApp, hourlyRate, 
             Daily Rate
           </label>
           <br />
-          <button onClick={handleBookClick}>Book</button>
+          <button onClick={handleBookClick}>Continue</button>
         </div>
       )}
-
-      {paymentOption && paymentOption !== 'viaApp' && (
-        <div className={`payment-method-overlay ${paymentOption ? 'show' : ''}`}>
-          <div className="payment-method-modal">
-            <h3>Select Payment Method:</h3>
-            <label>
-              <input
-                type="radio"
-                value="inPerson"
-                checked={paymentOption === 'inPerson'}
-                onChange={handleOptionChange}
-              />
-              Pay in Person
-            </label>
-            <label>
-              <input
-                type="radio"
-                value="viaApp"
-                checked={paymentOption === 'viaApp'}
-                onChange={handleOptionChange}
-              />
-              Pay via App
-            </label>
-            <br />
-            <button onClick={handlePayInPerson} disabled={!paymentOption || paymentOption === 'viaApp'}>
-              Book
-            </button>
-          </div>
-        </div>
-      )}
-
-      {paymentOption === 'viaApp' && (
+      {paymentOption && showPaymentOptions && (
         <div className="paypal-container">
           <div className="paypal-buttons">
             <h2>Total Bill: {totalBill}$</h2>

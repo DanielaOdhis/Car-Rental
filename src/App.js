@@ -132,12 +132,6 @@ export default function App() {
     setTotalBill(total);
   };
 
-  const handlePayViaApp = (total) => {
-    console.log('Pay via App:', total);
-    setPaymentOption('viaApp');
-    setTotalBill(total);
-  };
-
   const handleCheckoutComplete = () => {
     setSelectedCar(null);
     setIsBookingClicked(false);
@@ -192,9 +186,10 @@ export default function App() {
             {!isBookingClicked && (
               <BookingDialog
                 onPayInPerson={handlePayInPerson}
-                onPayViaApp={handlePayViaApp}
                 hourlyRate={selectedCar.Charges_Per_Hour}
+                carData={selectedCar}
                 dailyRate={selectedCar.Charges_Per_Day}
+                profileData={profileData}
                 onBookingClick={handleBookingClick}
               />
             )}
