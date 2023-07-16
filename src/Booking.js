@@ -56,21 +56,21 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
   
       const user = userResponse.data;
       const car = carResponse.data;
-      console.log('profileData:', profileData);
-    console.log('carData:', carData);
+    console.log(car);
+    console.log(car[0].Car_ID);
       
       if (!user || !user.id) {
         console.error('Invalid user data:', user);
         return;
       }
   
-      if (!car || !car.Car_ID) {
+      if (!car[0] || !car[0].Car_ID) {
         console.error('Invalid car data:', car);
         return;
       }
 
       formData.append('user_id', user.id);
-      formData.append('car_id', car.Car_ID);
+      formData.append('car_id', car[0].Car_ID);
 
       const formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
   
@@ -82,9 +82,9 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
       })
         .then((response) => {
           console.log(response.data);
-          onBookingClick(); // Call the onBookingClick callback
-          setPaymentOption('paypal'); // Set paymentOption state to 'paypal'
-          setShowPaymentOptions(true); // Set showPaymentOptions state to true
+          onBookingClick();
+          setPaymentOption('paypal');
+          setShowPaymentOptions(true);
         })
         .catch((error) => {
           console.error('Error creating booking:', error.response.data);

@@ -1,17 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function BookedCars({ user, onBackClick }) {
+export default function BookedCars({ onBackClick, profileData }) {
   const [bookedCars, setBookedCars] = useState([]);
 
   useEffect(() => {
-    fetchBookedCars(user.id);
-  }, [user.id]);
+    if (profileData && profileData.id) {
+      fetchBookedCars(profileData.id);
+    }
+  }, [profileData]);
 
   const fetchBookedCars = async (userId) => {
+    console.log('Fetching Booked Cars for user ID:', userId);
+
     try {
-      const response = await axios.get(`http://localhost:3004/api/bookings/${userId}`);
-      setBookedCars(response.data);
+      const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      const user = userResponse.data;
+
+      if (user && user.id) {
+        const response = await axios.get(`http://localhost:3004/api/bookedCars/${user.id}`);
+        setBookedCars(response.data);
+      } else {
+        console.error('Invalid user data:', user);
+      }
     } catch (error) {
       console.error('Error fetching booked cars:', error);
     }
@@ -48,8 +64,8 @@ export default function BookedCars({ user, onBackClick }) {
         </div>
       ) : (
         <div>
-        <p className="no-cars-message">No booked cars found.</p>
-        <button onClick={onBackClick}>Back</button>
+          <p className="no-cars-message">No booked cars found.</p>
+          <button onClick={onBackClick}>Back</button>
         </div>
       )}
     </div>
