@@ -5,8 +5,7 @@ import BookingDialog from './Booking.js';
 export default function CarDetails({ cars, onBackClick, userId, profileData }) {
   const [ownerDetails, setOwnerDetails] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
-  const [isBookingClicked, setIsBookingClicked] = useState(false); // Add this line
-
+  const [isBookingClicked, setIsBookingClicked] = useState(false);
   const fetchOwnerDetails = async () => {
     try {
       const response = await axios.get(`http://localhost:3004/api/ownerDetails/${cars.owner_ID}`, {
@@ -46,7 +45,7 @@ export default function CarDetails({ cars, onBackClick, userId, profileData }) {
 
   const handleBookingClick = () => {
     setShowBookingDialog(true);
-    setIsBookingClicked(false); // Reset the isBookingClicked state
+    setIsBookingClicked(true);
   };
 
   return (
@@ -81,7 +80,7 @@ export default function CarDetails({ cars, onBackClick, userId, profileData }) {
           profileData={profileData}
           carData={cars}
           onBookingClick={handleBookingClick}
-          isBookingClicked={isBookingClicked} // Pass isBookingClicked as a prop
+          isBookingClicked={isBookingClicked}
         />
       )}
     </div>

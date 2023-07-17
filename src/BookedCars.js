@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function BookedCars({ onBackClick, profileData }) {
+export default function BookedCars({ onBackClick, profileData, carData }) {
   const [bookedCars, setBookedCars] = useState([]);
 
   useEffect(() => {
@@ -11,7 +11,6 @@ export default function BookedCars({ onBackClick, profileData }) {
   }, [profileData]);
 
   const fetchBookedCars = async (userId) => {
-    console.log('Fetching Booked Cars for user ID:', userId);
 
     try {
       const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${userId}`, {
@@ -24,7 +23,24 @@ export default function BookedCars({ onBackClick, profileData }) {
 
       if (user && user.id) {
         const response = await axios.get(`http://localhost:3004/api/bookedCars/${user.id}`);
-        setBookedCars(response.data);
+        const bookedCars = response.data;
+
+        const carsWithDetails = await Promise.all(
+          bookedCars.map(async (bookedCar) => {
+            const carDetailsResponse = await axios.get(`http://localhost:3004/api/cars/${bookedCar.car_id}`);
+            const ownerDetailsResponse = await axios.get(`http://localhost:3004/api/ownerDetails/${carDetailsResponse.data[0].owner_ID}`);
+
+            const carDetails = carDetailsResponse.data;
+
+            return {
+              ...bookedCar,
+              car_details: carDetails,
+              owner_details: ownerDetailsResponse.data,
+            };
+          })
+        );
+
+        setBookedCars(carsWithDetails);
       } else {
         console.error('Invalid user data:', user);
       }
@@ -50,17 +66,23 @@ export default function BookedCars({ onBackClick, profileData }) {
       <h1>Booked Cars</h1>
       {bookedCars.length > 0 ? (
         <div>
-          {bookedCars.map((car) => (
-            <div className='booked-car-details' key={car.id}>
-              <img src={bufferToBase64(car.car_image)} alt={car.car_type} />
-              <h2>{car.car_type}</h2>
-              <p>Owner's Email: {car.owner_email}</p>
-              <p>Owner's Telephone: {car.owner_telephone}</p>
-              <p>Booking Date: {car.booking_date}</p>
-              <p>Pickup Time: {car.pickup_time}</p>
-              <button onClick={onBackClick}>Back</button>
+         <div  className='booked-car-details'>
+          {bookedCars.map((booking) => (
+            <div className='booked' key={booking.id}>
+             {booking.car_details.map((car) => (
+            <div key={car.Car_ID}>
+              <h2>{car.Car_Type}</h2>
+              <img src={bufferToBase64(car.image)} alt={car.Car_Type} />
             </div>
           ))}
+              <p>Owner's Email: {booking.owner_details.email}</p>
+              <p>Owner's Telephone: {booking.owner_details.phoneNumber}</p>
+              <p>Booking Date: {booking.booking_date}</p>
+              <p>Pickup Time: {booking.pickup_time}</p>
+            </div>
+          ))}
+            </div>
+            <button onClick={onBackClick}>Back</button>
         </div>
       ) : (
         <div>

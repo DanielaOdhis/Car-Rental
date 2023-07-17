@@ -43,7 +43,6 @@ export default function App() {
       setShowLoginForm(true);
       setIsLoggedIn(true);
       setUser({ email: formData.email });
-      console.log(formData);
 
       await fetchProfileData(formData.email);
     } catch (error) {
@@ -57,10 +56,8 @@ export default function App() {
       setShowLoginForm(false);
       setIsLoggedIn(true);
       setUser({ email: formData.email });
-      console.log(formData);
 
-      const response = await fetchProfileData(formData.email);
-      console.log(response);
+      await fetchProfileData(formData.email);
       onLogin(formData.email);
     } catch (error) {
       console.error('Error fetching user:', error);
@@ -79,7 +76,6 @@ export default function App() {
     try {
       const response = await axios.get(`http://localhost:3004/api/userDetails/${email}`);
       setProfileData(response.data);
-      console.log('Profile data:', response.data);
       return response.data;
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -92,7 +88,6 @@ export default function App() {
       axios
         .delete(`http://localhost:3004/api/userDetails/${user.email}`)
         .then((response) => {
-          console.log(response.data);
           handleLogout();
         })
         .catch((error) => {
@@ -182,7 +177,7 @@ export default function App() {
       return (
         <div>
           <div>
-            <CarDetails cars={selectedCar} onBackClick={handleBackClick} userId={user.id} />
+            <CarDetails cars={selectedCar} profileData={profileData} onBackClick={handleBackClick} userId={user.id} />
             {!isBookingClicked && (
               <BookingDialog
                 onPayInPerson={handlePayInPerson}
@@ -270,7 +265,7 @@ export default function App() {
     } else if (showBookedCars) {
       return (
         <div>
-          <BookedCars user={user} onBackClick={handleBackClick} />
+          <BookedCars user={user} onBackClick={handleBackClick} profileData={profileData} />
         </div>
       );
     } else {

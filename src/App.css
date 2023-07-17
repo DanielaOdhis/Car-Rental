@@ -16,6 +16,15 @@ h1{
     position: relative;
 
   }
+.booked-car-details{
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  }
+  .booked{
+    text-align: center;
+  position: relative;
+  }
 .selected-car-details {
     text-align: center;
     position: absolute;
@@ -169,7 +178,7 @@ h1{
   align-items: center;
   justify-content: center;
   position: fixed;
-  top: 50%;
+  top: 10%;
   left: 50%;
   z-index: 9999;
   background-color: #fff;
