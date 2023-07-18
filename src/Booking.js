@@ -22,6 +22,17 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
 
   const handleCheckoutComplete = () => {
     const formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
+
+    // add code to update the availability status here
+          try {
+           axios.put(`http://localhost:3004/api/cars/${carData.Car_ID}`, {
+              Rental_Status: 'Unavailable',
+            });
+            console.log('Availability status updated successfully.');
+          } catch (error) {
+            console.error('Error updating availability status:', error);
+          }
+
     axios.post('http://localhost:3004/api/bookings', {
       pickup_time: formattedPickupTime,
       user_id: profileData.id,

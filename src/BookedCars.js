@@ -73,16 +73,16 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
             <div key={car.Car_ID}>
               <h2>{car.Car_Type}</h2>
               <img src={bufferToBase64(car.image)} alt={car.Car_Type} />
+              <p><b>Owner's User Name </b>: {booking.owner_details.username}</p>
+              <p><b>Owner's Telephone</b>: {booking.owner_details.phoneNumber}</p>
+              <p><b>Booking Date</b>: {booking.booking_date}</p>
+              <p><b>Pickup Time</b>: {booking.pickup_time}</p>
+              <button onClick={onBackClick}>Back</button>
             </div>
           ))}
-              <p>Owner's Email: {booking.owner_details.email}</p>
-              <p>Owner's Telephone: {booking.owner_details.phoneNumber}</p>
-              <p>Booking Date: {booking.booking_date}</p>
-              <p>Pickup Time: {booking.pickup_time}</p>
             </div>
           ))}
             </div>
-            <button onClick={onBackClick}>Back</button>
         </div>
       ) : (
         <div>
