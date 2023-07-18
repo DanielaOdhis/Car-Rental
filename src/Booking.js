@@ -27,6 +27,7 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
       user_id: profileData.id,
       booking_date: bookingDate,
       car_id: carData.Car_ID,
+      owner_id: carData.owner_ID,
     })
       .then((response) => {
         console.log("Booking res: ", response.data);
@@ -61,6 +62,7 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
     formData.append('user_id', profileData.id);
     formData.append('booking_date', bookingDate);
     formData.append('car_id', carData.Car_ID);
+    formData.append('owner_id', carData.owner_ID);
 
     try {
       const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${profileData.id}`, {
@@ -77,8 +79,6 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
 
       const user = userResponse.data;
       const car = carResponse.data;
-      console.log(car);
-      console.log(car[0].Car_ID);
 
       if (!user || !user.id) {
         console.error('Invalid user data:', user);
@@ -92,6 +92,7 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
 
       formData.append('user_id', user.id);
       formData.append('car_id', car[0].Car_ID);
+      formData.append('owner_id', car[0].owner_ID);
 
       // formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
 
