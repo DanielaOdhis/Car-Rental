@@ -3,6 +3,8 @@ import axios from 'axios';
 
 export default function BookedCars({ onBackClick, profileData, carData }) {
   const [bookedCars, setBookedCars] = useState([]);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   useEffect(() => {
     if (profileData && profileData.id) {
@@ -11,7 +13,6 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
   }, [profileData]);
 
   const fetchBookedCars = async (userId) => {
-
     try {
       const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${userId}`, {
         headers: {
@@ -30,7 +31,7 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
             const carDetailsResponse = await axios.get(`http://localhost:3004/api/cars/${bookedCar.car_id}`);
             const ownerDetailsResponse = await axios.get(`http://localhost:3004/api/ownerDetails/${carDetailsResponse.data[0].owner_ID}`);
 
-            const carDetails = carDetailsResponse.data;
+            const carDetails = carDetailsResponse.data[0];
 
             return {
               ...bookedCar,
@@ -48,6 +49,29 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
       console.error('Error fetching booked cars:', error);
     }
   };
+  console.log('bookedCars:', bookedCars);
+
+  const deleteBookedCar = async (id) => {
+    try {
+      const response = await axios.delete(`http://localhost:3004/api/bookedCars/${id}`);
+      if (response.status === 200) {
+        try {
+          await axios.put(`http://localhost:3004/api/cars/${bookedCars.find(car => car.id === id).car_id}`, {
+            Rental_Status: 'Available',
+          });
+          console.log('Availability status updated successfully.');
+        } catch (error) {
+          console.error('Error updating availability status:', error);
+        }
+        console.log('Booking canceled successfully.');
+        fetchBookedCars(profileData.id);
+      } else {
+        console.error('Error canceling booking:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error canceling booking:', error);
+    }
+  };
 
   const bufferToBase64 = (buffer) => {
     if (!buffer || !buffer.data) {
@@ -61,33 +85,54 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
     return `data:image/${type};base64,${base64String}`;
   };
 
+  const handleCancelClick = (booking) => {
+    setSelectedBooking(booking);
+    setShowConfirmation(true);
+  };
+
+  const confirmCancel = () => {
+    setShowConfirmation(false);
+    if (selectedBooking) {
+      deleteBookedCar(selectedBooking.id);
+      setSelectedBooking(null);
+    }
+  };
+
+  const cancelCancel = () => {
+    setShowConfirmation(false);
+    setSelectedBooking(null);
+  };
+
   return (
     <div>
       <h1>Booked Cars</h1>
       {bookedCars.length > 0 ? (
-        <div>
-         <div  className='booked-car-details'>
+        <div className='booked-car-details'>
           {bookedCars.map((booking) => (
-            <div className='booked' key={booking.id}>
-             {booking.car_details.map((car) => (
-            <div key={car.Car_ID}>
-              <h2>{car.Car_Type}</h2>
-              <img src={bufferToBase64(car.image)} alt={car.Car_Type} />
-              <p><b>Owner's User Name </b>: {booking.owner_details.username}</p>
+            <div className='booked' key={booking.id} onClick={() => handleCancelClick(booking)}>
+              <h2>{booking.car_details.Car_Type}</h2>
+              <img src={bufferToBase64(booking.car_details.image)} alt={booking.car_details.Car_Type} />
+              <p><b>Owner's User Name</b>: {booking.owner_details.username}</p>
               <p><b>Owner's Telephone</b>: {booking.owner_details.phoneNumber}</p>
               <p><b>Booking Date</b>: {booking.booking_date}</p>
               <p><b>Pickup Time</b>: {booking.pickup_time}</p>
-              <button onClick={onBackClick}>Back</button>
             </div>
           ))}
-            </div>
-          ))}
-            </div>
+          <div>
+            <button onClick={onBackClick}>Back</button>
+          </div>
         </div>
       ) : (
         <div>
           <p className="no-cars-message">No booked cars found.</p>
           <button onClick={onBackClick}>Back</button>
+        </div>
+      )}
+      {showConfirmation && (
+        <div className="confirmation-modal">
+          <p>You're about to cancel this order. Are you sure?</p>
+          <button onClick={confirmCancel}>Confirm</button>
+          <button onClick={cancelCancel}>Cancel</button>
         </div>
       )}
     </div>

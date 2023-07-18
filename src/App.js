@@ -265,7 +265,7 @@ export default function App() {
     } else if (showBookedCars) {
       return (
         <div>
-          <BookedCars user={user} onBackClick={handleBackClick} profileData={profileData} />
+          <BookedCars user={user} onBackClick={handleBackClick} profileData={profileData}/>
         </div>
       );
     } else {
