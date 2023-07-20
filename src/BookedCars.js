@@ -25,6 +25,7 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
       if (user && user.id) {
         const response = await axios.get(`http://localhost:3004/api/bookedCars/${user.id}`);
         const bookedCars = response.data;
+        console.log(bookedCars);
 
         const carsWithDetails = await Promise.all(
           bookedCars.map(async (bookedCar) => {
@@ -49,11 +50,11 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
       console.error('Error fetching booked cars:', error);
     }
   };
-  console.log('bookedCars:', bookedCars);
 
   const deleteBookedCar = async (id) => {
     try {
       const response = await axios.delete(`http://localhost:3004/api/bookedCars/${id}`);
+      console.log(response);
       if (response.status === 200) {
         try {
           await axios.put(`http://localhost:3004/api/cars/${bookedCars.find(car => car.id === id).car_id}`, {
@@ -103,19 +104,33 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
     setSelectedBooking(null);
   };
 
+  const formatTimeInHours = (seconds) => {
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${hours}h ${minutes}m ${remainingSeconds}s`;
+  };
+
   return (
     <div>
       <h1>Booked Cars</h1>
       {bookedCars.length > 0 ? (
         <div className='booked-car-details'>
           {bookedCars.map((booking) => (
-            <div className='booked' key={booking.id} onClick={() => handleCancelClick(booking)}>
+            <div className='booked' key={booking.id} >
               <h2>{booking.car_details.Car_Type}</h2>
+              <div onClick={() => handleCancelClick(booking)}>
               <img src={bufferToBase64(booking.car_details.image)} alt={booking.car_details.Car_Type} />
+              </div>
               <p><b>Owner's User Name</b>: {booking.owner_details.username}</p>
               <p><b>Owner's Telephone</b>: {booking.owner_details.phoneNumber}</p>
               <p><b>Booking Date</b>: {booking.booking_date}</p>
               <p><b>Pickup Time</b>: {booking.pickup_time}</p>
+              <p><b>Time Elapsed</b>: {formatTimeInHours(booking.total_time*3600)}</p>
+              <div>
+              <p><b>Total Bill</b>: {((booking.total_time )-1) * booking.car_details.Charges_Per_Hour}$</p>
+              </div>
             </div>
           ))}
           <div>

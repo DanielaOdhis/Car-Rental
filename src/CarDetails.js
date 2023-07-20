@@ -56,7 +56,6 @@ export default function CarDetails({ cars, onBackClick, userId, profileData }) {
           <img src={bufferToBase64(cars.image)} alt={cars.Car_Type} />
           <p>Availability Status: {cars.Rental_Status}</p>
           <p>Price per Hour: {cars.Charges_Per_Hour}$</p>
-          <p>Price per Day: {cars.Charges_Per_Day}$</p>
           <p>Location: {cars.Location}</p>
           {ownerDetails && (
             <div>
@@ -75,7 +74,6 @@ export default function CarDetails({ cars, onBackClick, userId, profileData }) {
       {showBookingDialog && (
         <BookingDialog
           hourlyRate={cars.Charges_Per_Hour}
-          dailyRate={cars.Charges_Per_Day}
           carId={cars.Car_ID}
           profileData={profileData}
           carData={cars}

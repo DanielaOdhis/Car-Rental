@@ -12,7 +12,6 @@ function Cars({ onCarClick }) {
     try {
       const response = await fetch('http://localhost:3004/api/cars');
       const data = await response.json();
-      console.log(data); // Check if the data is received correctly
       setCars(data);
     } catch (error) {
       console.error('Error Fetching Data', error);
@@ -70,7 +69,6 @@ function Cars({ onCarClick }) {
               <img src={bufferToBase64(car.image)} alt={car.Car_Type} />
               <p>Availability Status: {car.Rental_Status}</p>
               <p>Price per Hour: {car.Charges_Per_Hour}$</p>
-              <p>Price per Day: {car.Charges_Per_Day}$</p>
               <hr />
             </div>
           ))
