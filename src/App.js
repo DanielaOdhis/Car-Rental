@@ -183,7 +183,6 @@ export default function App() {
                 onPayInPerson={handlePayInPerson}
                 hourlyRate={selectedCar.Charges_Per_Hour}
                 carData={selectedCar}
-                dailyRate={selectedCar.Charges_Per_Day}
                 profileData={profileData}
                 onBookingClick={handleBookingClick}
               />
@@ -265,7 +264,13 @@ export default function App() {
     } else if (showBookedCars) {
       return (
         <div>
-          <BookedCars user={user} onBackClick={handleBackClick} profileData={profileData}/>
+          <BookedCars
+            user={user}
+            onBackClick={handleBackClick}
+            profileData={profileData}
+            totalBill={totalBill}
+            initialOptions={initialOptions}
+          />
         </div>
       );
     } else {
