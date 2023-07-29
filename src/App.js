@@ -11,6 +11,7 @@ import axios from 'axios';
 import BookingDialog from './Booking.js';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import BookedCars from './BookedCars.js';
+import Forgot from './forgotPassword.js';
 
 export default function App() {
   const [selectedCar, setSelectedCar] = useState(null);
@@ -24,6 +25,7 @@ export default function App() {
   const [totalBill, setTotalBill] = useState(0);
   const [isBookingClicked, setIsBookingClicked] = useState(false);
   const [showBookedCars, setShowBookedCars] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
 
   const handleCarClick = (car) => {
     setSelectedCar(car);
@@ -149,26 +151,46 @@ export default function App() {
     currency: "USD",
     intent: "capture",
   };
+  const handleForgot = () => {
+    setShowForgot(true);
+    setShowLoginForm(false);
+  };
+
+  const handleForgotLog=()=>{
+    setShowForgot(false);
+    setShowLoginForm(true);
+  }
 
   if (!isLoggedIn) {
     return (
       <div>
         {showLoginForm ? (
-          <div className="login-form">
-            <h1>Login</h1>
-            <Login onLogin={handleLogin} />
-            <p>
-              Don't have an account? <button onClick={() => setShowLoginForm(false)}>Sign up</button>
-            </p>
-          </div>
+         <div className="login-form">
+         <h1>Login</h1>
+         <Login onLogin={handleLogin} />
+         <p>
+           Don't have an account? <button onClick={() => setShowLoginForm(false)}>Sign up</button>
+         </p>
+         <div onClick={handleForgot} className="forgot-container">
+           <p>Forgot Password?</p>
+         </div>
+       </div>
         ) : (
-          <div className="signup-form">
-            <h1>Sign Up</h1>
-            <Signup onSignUp={handleSignup} />
-            <p>
-              Already have an account? <button onClick={() => setShowLoginForm(true)}>Login</button>
-            </p>
-          </div>
+          <>
+          {showForgot ? (
+            <div>
+            <Forgot onBack={handleForgotLog} />
+            </div>
+          ) : (
+            <div className="signup-form">
+              <h1>Sign Up</h1>
+              <Signup onSignUp={handleSignup} />
+              <p>
+                Already have an account? <button onClick={() => setShowLoginForm(true)}>Login</button>
+              </p>
+            </div>
+          )}
+        </>
         )}
       </div>
     );
