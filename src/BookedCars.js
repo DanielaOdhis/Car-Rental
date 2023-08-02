@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import dotenv from 'dotenv';
-dotenv.config();
 
 export default function BookedCars({ onBackClick, profileData, carData }) {
   const [bookedCars, setBookedCars] = useState([]);
@@ -10,6 +8,7 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
   const [totalBill, setTotalBill] = useState(0);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (profileData && profileData.id) {
@@ -47,12 +46,14 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
             };
           })
         );
-
+        setLoading(false);
         setBookedCars(carsWithDetails);
       } else {
+        setLoading(false);
         console.error('Invalid user data:', user);
       }
     } catch (error) {
+      setLoading(false);
       console.error('Error fetching booked cars:', error);
     }
   };
@@ -171,7 +172,9 @@ const handleBackClick= () => {
   return (
     <div>
       <h1>Booked Cars</h1>
-      {bookedCars.length > 0 ? (
+      {loading ? (
+        <p>Loading...</p>
+      ) : bookedCars.length > 0 ? (
         <div className='booked-car-details'>
           {bookedCars.map((booking) => (
             <div className='booked' key={booking.id}>
@@ -189,39 +192,39 @@ const handleBackClick= () => {
               </div>
               {showPaymentOptions && selectedBooking && selectedBooking.id === booking.id && (
                 <div className="paypal-container">
-                <div className="paypal-buttons">
-                <PayPalScriptProvider options={{ "client-id": process.env.CLIENT_ID }}>
-                  <PayPalButtons
-                    createOrder={(data, actions) => {
-                      return actions.order.create({
-                        purchase_units: [
-                          {
-                            amount: {
-                              currency_code: "USD",
-                              value: totalBill,
-                            },
-                          },
-                        ],
-                      });
-                    }}
-                    onApprove={(data, actions) => {
-                      return actions.order.capture().then((details) => {
-                        console.log("Payment completed:", details);
-                        handleCheckoutComplete();
-                      });
-                    }}
-                    onCancel={handlePaymentCancel}
-                  />
-                </PayPalScriptProvider>
-                <button onClick={handleBackClick}>Back</button>
-                </div>
+                  <div className="paypal-buttons">
+                    <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID }}>
+                      <PayPalButtons
+                        createOrder={(data, actions) => {
+                          return actions.order.create({
+                            purchase_units: [
+                              {
+                                amount: {
+                                  currency_code: "USD",
+                                  value: totalBill,
+                                },
+                              },
+                            ],
+                          });
+                        }}
+                        onApprove={(data, actions) => {
+                          return actions.order.capture().then((details) => {
+                            console.log("Payment completed:", details);
+                            handleCheckoutComplete();
+                          });
+                        }}
+                        onCancel={handlePaymentCancel}
+                      />
+                    </PayPalScriptProvider>
+                    <button onClick={handleBackClick}>Back</button>
+                  </div>
                 </div>
               )}
             </div>
           ))}
           <div>
             <button onClick={onBackClick}>Back</button>
-        </div>
+          </div>
         </div>
       ) : (
         <div>
