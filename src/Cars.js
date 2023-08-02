@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 function Cars({ onCarClick }) {
   const [cars, setCars] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchCarData();
@@ -13,8 +14,10 @@ function Cars({ onCarClick }) {
       const response = await fetch('http://localhost:3004/api/cars');
       const data = await response.json();
       setCars(data);
+      setLoading(false);
     } catch (error) {
       console.error('Error Fetching Data', error);
+      setLoading(false);
     }
   };
 
@@ -61,21 +64,25 @@ function Cars({ onCarClick }) {
           onChange={handleSearch}
         />
       </div>
-      <div className="grid-container">
-        {filteredCars.length > 0 ? (
-          filteredCars.map((car, index) => (
-            <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
-              <h2>{car.Car_Type}</h2>
-              <img src={bufferToBase64(car.image)} alt={car.Car_Type} />
-              <p>Availability Status: {car.Rental_Status}</p>
-              <p>Price per Hour: {car.Charges_Per_Hour}$</p>
-              <hr />
-            </div>
-          ))
-        ) : (
-          <p className='no-cars-message'>No Available Cars as for Now 😢</p>
-        )}
-      </div>
+      {loading ? (
+        <p>Loading...</p>
+      ) : (
+        <div className="grid-container">
+          {filteredCars.length > 0 ? (
+            filteredCars.map((car, index) => (
+              <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
+                <h2>{car.Car_Type}</h2>
+                <img src={bufferToBase64(car.image)} alt={car.Car_Type} />
+                <p>Availability Status: {car.Rental_Status}</p>
+                <p>Price per Hour: {car.Charges_Per_Hour}$</p>
+                <hr />
+              </div>
+            ))
+          ) : (
+            <p className='no-cars-message'>No Available Cars as for Now 😢</p>
+          )}
+        </div>
+      )}
     </div>
   );
 }

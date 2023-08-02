@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default function BookedCars({ onBackClick, profileData, carData }) {
   const [bookedCars, setBookedCars] = useState([]);
@@ -188,7 +190,7 @@ const handleBackClick= () => {
               {showPaymentOptions && selectedBooking && selectedBooking.id === booking.id && (
                 <div className="paypal-container">
                 <div className="paypal-buttons">
-                <PayPalScriptProvider options={{ "client-id": "ASN7dDTvZJKxzp5RbbJj7V5SPpgduCFL7p191WTSbDPh1SFHIlew5IpYSaQS1K2mCuhTA8Bm4j3aLt6H" }}>
+                <PayPalScriptProvider options={{ "client-id": process.env.CLIENT_ID }}>
                   <PayPalButtons
                     createOrder={(data, actions) => {
                       return actions.order.create({

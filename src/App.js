@@ -12,6 +12,8 @@ import BookingDialog from './Booking.js';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import BookedCars from './BookedCars.js';
 import Forgot from './forgotPassword.js';
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default function App() {
   const [selectedCar, setSelectedCar] = useState(null);
@@ -147,7 +149,7 @@ export default function App() {
   };
 
   const initialOptions = {
-    clientId: "AUqD0H3D-HyokMyCUcOhHvV7sL9qrjFmPVVPTw6WsVaXyTlwhqEgjQF4KAOUz6jQGQP8gFoRKP65gm9e",
+    clientId: process.env.CLIENT_ID,
     currency: "USD",
     intent: "capture",
   };

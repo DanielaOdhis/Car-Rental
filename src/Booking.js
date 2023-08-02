@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import dotenv from 'dotenv';
+dotenv.config();
 
 export default function BookingDialog({ hourlyRate, carId, profileData, carData, onBookingClick, isBookingClicked }) {
   const [totalBill, setTotalBill] = useState({hourlyRate});
@@ -147,7 +149,7 @@ export default function BookingDialog({ hourlyRate, carId, profileData, carData,
         <div className="paypal-container">
           <div className="paypal-buttons">
             <h2>Total Bill: {totalBill}$</h2>
-            <PayPalScriptProvider options={{ "client-id": "ASN7dDTvZJKxzp5RbbJj7V5SPpgduCFL7p191WTSbDPh1SFHIlew5IpYSaQS1K2mCuhTA8Bm4j3aLt6H"}}>
+            <PayPalScriptProvider options={{ "client-id": process.env.CLIENT_ID}}>
               <PayPalButtons
                 createOrder={(data, actions) => {
                   return actions.order.create({
