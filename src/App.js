@@ -166,6 +166,7 @@ export default function App() {
     return (
       <div>
         {showLoginForm ? (
+          <div className="background-container">
          <div className="login-form">
          <h1>Login</h1>
          <Login onLogin={handleLogin} />
@@ -175,20 +176,25 @@ export default function App() {
          <div onClick={handleForgot} className="forgot-container">
            <p>Forgot Password?</p>
          </div>
+         </div>
        </div>
         ) : (
           <>
           {showForgot ? (
             <div>
+            <div className="background-container">
             <Forgot onBack={handleForgotLog} />
             </div>
+            </div>
           ) : (
+            <div className="background-container">
             <div className="signup-form">
               <h1>Sign Up</h1>
               <Signup onSignUp={handleSignup} />
               <p>
                 Already have an account? <button onClick={() => setShowLoginForm(true)}>Login</button>
               </p>
+              </div>
             </div>
           )}
         </>
