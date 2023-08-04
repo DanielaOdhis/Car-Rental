@@ -173,7 +173,9 @@ const handleBackClick= () => {
     <div>
       <h1>Booked Cars</h1>
       {loading ? (
-        <p>Loading...</p>
+        <div className="loading-container">
+        <p className="loading-spinner">Loading...</p>
+        </div>
       ) : bookedCars.length > 0 ? (
         <div className='booked-car-details'>
           {bookedCars.map((booking) => (
