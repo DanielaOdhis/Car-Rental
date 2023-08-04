@@ -38,7 +38,7 @@ h1 {
 }
 
 .grid-item h2{
-  color: black;
+color: black;
 font-family: Montserrat;
 font-size: 24px;
 font-weight: 800;
@@ -99,13 +99,31 @@ flex-shrink: 0;
   position: relative;
 }
 
-.selected-car-details {
-  text-align: center;
+.selected {
   position: absolute;
-  background-color: white;
+  background-color: #FEDAFE;
+  top: 0;
+  z-index: -2;
+}
+
+.selected-container {
+  display: flex;
+  align-items: center;
+  position: relative;
+  top: 0;
+  min-height: 100%;
+  width: 100vw;
+  z-index: 0;
+}
+
+.selected-car-details {
+  z-index: 1;
+  text-align: center;
   padding: 10px;
-  border-radius: 5px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border-radius: 20px;
+  background: linear-gradient(135deg, #502250 30%, #FF7c46 60%, #502250 70%);
+  background-position: top left, center, bottom right;
+  box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.25);
   transition: bottom 0.3s ease;
   -webkit-transition: bottom 0.3s ease;
   -moz-transition: bottom 0.3s ease;
@@ -113,10 +131,48 @@ flex-shrink: 0;
   -o-transition: bottom 0.3s ease;
 }
 
+.selected-car-details img {
+  border-radius: 15px;
+  border: 1px solid #ECD7D7;
+  -webkit-border-radius: 15px;
+  -moz-border-radius: 15px;
+  -ms-border-radius: 15px;
+  -o-border-radius: 15px;
+}
+
 .grid-item:hover .selected-car-details {
   bottom: 0;
 }
 
+.avail {
+  border-radius: 20px;
+  background: linear-gradient(134deg, #FEDAFE 0%, #FFADA9 100%);
+  box-shadow: 0px 7px 14px 0px rgba(0, 0, 0, 0.25);
+  justify-content: space-between;
+  flex-direction: row;
+}
+
+.avail button {
+  padding: 10px 16px;
+  margin: 10px;
+  width: 66px;
+height: 23px;
+flex-shrink: 0;
+}
+
+.select{
+  margin: 10px;
+  margin-bottom: 20px;
+  margin-left: 60px;
+  padding: 10px;
+  width: 277px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: 15px;
+background: #FEDAFE;
+box-shadow: 1.220564630235435e-15px 19.933332443237305px 39.86666488647461px 0px rgba(43, 43, 43, 0.30), 4.2312908840267934e-16px 6.910222053527832px 6.910222053527832px 0px #FFF inset, -4.2312908840267934e-16px -6.910222053527832px 6.910222053527832px 0px #A5A5A5 inset;
+z-index: 2;
+}
 .hidden {
   display: none;
 }
@@ -166,8 +222,8 @@ button{
   margin: 5px;
   cursor: pointer;
   border-radius: 10px;
-  background: #000;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
+background: #000;
+box-shadow: 0px 19.93000030517578px 39.81999969482422px 0px rgba(0, 0, 0, 0.65), 0px 6.909999847412109px 6.909999847412109px 0px #FFADA9 inset, 0px -6.909999847412109px 6.909999847412109px 0px #000 inset;
   border: none;
   padding: 10px 20px;
   color: #FFF;
@@ -186,8 +242,7 @@ button{
   -o-transition: background-color 0.3s ease;
 }
 
-.signup-form button:hover,
-.login-form button:hover {
+button:hover{
   background-color: tomato;
 }
 
