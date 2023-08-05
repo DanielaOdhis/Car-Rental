@@ -11,6 +11,8 @@ import axios from 'axios';
 import BookingDialog from './Booking.js';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import BookedCars from './BookedCars.js';
+import Forgot from './forgotPassword.js';
+
 
 export default function App() {
   const [selectedCar, setSelectedCar] = useState(null);
@@ -24,6 +26,7 @@ export default function App() {
   const [totalBill, setTotalBill] = useState(0);
   const [isBookingClicked, setIsBookingClicked] = useState(false);
   const [showBookedCars, setShowBookedCars] = useState(false);
+  const [showForgot, setShowForgot] = useState(false);
 
   const handleCarClick = (car) => {
     setSelectedCar(car);
@@ -145,30 +148,56 @@ export default function App() {
   };
 
   const initialOptions = {
-    clientId: "AUqD0H3D-HyokMyCUcOhHvV7sL9qrjFmPVVPTw6WsVaXyTlwhqEgjQF4KAOUz6jQGQP8gFoRKP65gm9e",
+    clientId: process.env.REACT_APP_CLIENT_ID,
     currency: "USD",
     intent: "capture",
   };
+  const handleForgot = () => {
+    setShowForgot(true);
+    setShowLoginForm(false);
+  };
+
+  const handleForgotLog=()=>{
+    setShowForgot(false);
+    setShowLoginForm(true);
+  }
 
   if (!isLoggedIn) {
     return (
       <div>
         {showLoginForm ? (
-          <div className="login-form">
-            <h1>Login</h1>
-            <Login onLogin={handleLogin} />
-            <p>
-              Don't have an account? <button onClick={() => setShowLoginForm(false)}>Sign up</button>
-            </p>
-          </div>
+          <div className="background-container">
+         <div className="login-form">
+         <h1>Login</h1>
+         <Login onLogin={handleLogin} />
+         <p>
+           Don't have an account? <button onClick={() => setShowLoginForm(false)}>Sign up</button>
+         </p>
+         <div onClick={handleForgot} className="forgot-container">
+           <p>Forgot Password?</p>
+         </div>
+         </div>
+       </div>
         ) : (
-          <div className="signup-form">
-            <h1>Sign Up</h1>
-            <Signup onSignUp={handleSignup} />
-            <p>
-              Already have an account? <button onClick={() => setShowLoginForm(true)}>Login</button>
-            </p>
-          </div>
+          <>
+          {showForgot ? (
+            <div>
+            <div className="background-container">
+            <Forgot onBack={handleForgotLog} />
+            </div>
+            </div>
+          ) : (
+            <div className="background-container">
+            <div className="signup-form">
+              <h1>Sign Up</h1>
+              <Signup onSignUp={handleSignup} />
+              <p>
+                Already have an account? <button onClick={() => setShowLoginForm(true)}>Login</button>
+              </p>
+              </div>
+            </div>
+          )}
+        </>
         )}
       </div>
     );
@@ -183,7 +212,6 @@ export default function App() {
                 onPayInPerson={handlePayInPerson}
                 hourlyRate={selectedCar.Charges_Per_Hour}
                 carData={selectedCar}
-                dailyRate={selectedCar.Charges_Per_Day}
                 profileData={profileData}
                 onBookingClick={handleBookingClick}
               />
@@ -265,7 +293,13 @@ export default function App() {
     } else if (showBookedCars) {
       return (
         <div>
-          <BookedCars user={user} onBackClick={handleBackClick} profileData={profileData}/>
+          <BookedCars
+            user={user}
+            onBackClick={handleBackClick}
+            profileData={profileData}
+            totalBill={totalBill}
+            initialOptions={initialOptions}
+          />
         </div>
       );
     } else {

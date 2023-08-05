@@ -2,26 +2,16 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
-export default function BookingDialog({ hourlyRate, dailyRate, carId, profileData, carData, onBookingClick, isBookingClicked }) {
-  const [paymentOption, setPaymentOption] = useState('');
-  const [totalBill, setTotalBill] = useState(0);
+
+export default function BookingDialog({ hourlyRate, carId, profileData, carData, onBookingClick, isBookingClicked }) {
+  const [totalBill, setTotalBill] = useState({hourlyRate});
   const [pickupTime, setPickupTime] = useState('');
   const [bookingDate, setBookingDate] = useState('');
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
 
-  const handleOptionChange = (event) => {
-    const selectedOption = event.target.value;
-    setPaymentOption(selectedOption);
-
-    if (selectedOption === 'hourly') {
-      setTotalBill(hourlyRate);
-    } else if (selectedOption === 'daily') {
-      setTotalBill(dailyRate);
-    }
-  };
-
   const handleCheckoutComplete = () => {
     const formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
+    setTotalBill(hourlyRate);
 
     // add code to update the availability status here
           try {
@@ -32,7 +22,7 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
           } catch (error) {
             console.error('Error updating availability status:', error);
           }
-
+    setShowPaymentOptions(false);
     axios.post('http://localhost:3004/api/bookings', {
       pickup_time: formattedPickupTime,
       user_id: profileData.id,
@@ -46,12 +36,11 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
       .catch((error) => {
         console.error('Error creating booking:', error.response.data);
       });
-    setPaymentOption('');
-    setTotalBill(0);
   };
 
   const handleBackClick = () => {
-    setPaymentOption(totalBill);
+    setShowPaymentOptions(false);
+    setTotalBill(hourlyRate);
   };
   const handleBookClick = async () => {
     if (!pickupTime || !bookingDate) {
@@ -106,10 +95,10 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
       formData.append('owner_id', car[0].owner_ID);
 
       // formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
-
+      setTotalBill(hourlyRate);
       const createOrderData = {
         cars: {
-          Charges_Per_Day: totalBill,
+          Charges_Per_Hour: totalBill,
         },
       };
       console.log("Creating order")
@@ -122,8 +111,6 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
         .catch((error) => {
           console.error('Error creating PayPal order:', error);
         });
-
-
 
     } catch (error) {
       console.error('Error fetching user or car details:', error);
@@ -152,34 +139,16 @@ export default function BookingDialog({ hourlyRate, dailyRate, carId, profileDat
                 onChange={(e) => setBookingDate(e.target.value)}
               />
             </label>
-            <br />
+            <br /> <br />
           </div>
-          <h3>Select Rates Option:</h3>
-          <label>
-            <input
-              type="radio"
-              value="hourly"
-              onChange={handleOptionChange}
-            />
-            Hourly Rate
-          </label>
-          <label>
-            <input
-              type="radio"
-              value="daily"
-              onChange={handleOptionChange}
-            />
-            Daily Rate
-          </label>
-          <br />
           <button onClick={handleBookClick}>Billing</button>
         </div>
       )}
-      {paymentOption && showPaymentOptions && (
+      {showPaymentOptions && (
         <div className="paypal-container">
           <div className="paypal-buttons">
             <h2>Total Bill: {totalBill}$</h2>
-            <PayPalScriptProvider options={{ "client-id": "ASN7dDTvZJKxzp5RbbJj7V5SPpgduCFL7p191WTSbDPh1SFHIlew5IpYSaQS1K2mCuhTA8Bm4j3aLt6H"}}>
+            <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID}}>
               <PayPalButtons
                 createOrder={(data, actions) => {
                   return actions.order.create({

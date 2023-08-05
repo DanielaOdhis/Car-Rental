@@ -50,16 +50,26 @@ export default function CarDetails({ cars, onBackClick, userId, profileData }) {
 
   return (
     <div>
+    <div className="selected">
+      <div className="selected-container">
       {cars ? (
         <div className='selected-car-details'>
-          <h2>{cars.Car_Type}</h2>
+            <br /><br/>
           <img src={bufferToBase64(cars.image)} alt={cars.Car_Type} />
+          <br /><br/>
+          <div className="avail">
+            <br/>
+          <div className='select'>
           <p>Availability Status: {cars.Rental_Status}</p>
+          </div>
+          <div className='select'>
           <p>Price per Hour: {cars.Charges_Per_Hour}$</p>
-          <p>Price per Day: {cars.Charges_Per_Day}$</p>
+          </div>
+          <div className='select'>
           <p>Location: {cars.Location}</p>
+          </div>
           {ownerDetails && (
-            <div>
+            <div className="hidden">
               <h2>Owner Details</h2>
               <p>Owner Name: {ownerDetails.firstName}</p>
               <p>Email: {ownerDetails.email}</p>
@@ -69,13 +79,13 @@ export default function CarDetails({ cars, onBackClick, userId, profileData }) {
           <button onClick={handleBackClick}>Back</button>
           <button onClick={handleBookingClick}>Book</button>
         </div>
+        </div>
       ) : (
         <p>Loading...</p>
       )}
       {showBookingDialog && (
         <BookingDialog
           hourlyRate={cars.Charges_Per_Hour}
-          dailyRate={cars.Charges_Per_Day}
           carId={cars.Car_ID}
           profileData={profileData}
           carData={cars}
@@ -83,6 +93,8 @@ export default function CarDetails({ cars, onBackClick, userId, profileData }) {
           isBookingClicked={isBookingClicked}
         />
       )}
+      </div>
+      </div>
     </div>
   );
 }
