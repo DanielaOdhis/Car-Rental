@@ -2,11 +2,10 @@ import React, {useEffect} from 'react';
 import Update from './Update.js';
 import { useNavigate } from 'react-router-dom';
 
-export default function Profile({ profileData, onBackClick }) {
+export default function Profile({ profileData }) {
 const navigate=useNavigate();
 
 const handleBack=()=>{
-  onBackClick();
   navigate('/Cars');
   localStorage.removeItem('profileData');
 }

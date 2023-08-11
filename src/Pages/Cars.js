@@ -7,6 +7,7 @@ function Cars() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const[selectedCar, setSelectedCar]= useState(null);
+
   useEffect(() => {
     fetchCarData();
   }, );
@@ -16,6 +17,7 @@ function Cars() {
       const response = await fetch('http://localhost:3004/api/cars');
       const data = await response.json();
       setCars(data);
+      console.log("local:",localStorage.getItem("loggedUser"));
       setLoading(false);
     } catch (error) {
       console.error('Error Fetching Data', error);
@@ -59,9 +61,6 @@ function Cars() {
 
   const filteredCars = cars.filter(filterCars);
 
-  const handleBackClick=()=>{
-    setSelectedCar(null);
-  }
   return (
     !selectedCar ? (
     <div className="grid">
@@ -159,7 +158,7 @@ function Cars() {
       )}
     </div>
     ):(
-      <CarDetails cars={selectedCar} onBackClick={handleBackClick} />
+      <CarDetails cars={selectedCar}/>
     )
   );
 }

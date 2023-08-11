@@ -3,32 +3,48 @@ import axios from 'axios';
 import BookingDialog from './Booking.js';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export default function CarDetails({ cars, onBackClick, userId }) {
+export default function CarDetails() {
+  const [carDetails, setCarDetails] = useState(null);
   const [ownerDetails, setOwnerDetails] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [isBookingClicked, setIsBookingClicked] = useState(false);
 
   const navigate = useNavigate();
-  const location = useLocation();
-
-  const fetchOwnerDetails = async () => {
+  const location = useLocation().search;
+  const carId = new URLSearchParams(location).get("carId");
+  const fetchCarData = async () => {
     try {
-      const response = await axios.get(`http://localhost:3004/api/ownerDetails/${cars.owner_ID}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
 
-      if (response.data) {
-        setOwnerDetails(response.data);
+      const response = await fetch(`http://localhost:3004/api/cars/${carId}`);
+      const data = await response.json();
+      console.log(data[0].owner_ID);
+      setCarDetails(data[0]);
+      try {
+        const response = await axios.get(`http://localhost:3004/api/ownerDetails/${data[0].owner_ID}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+  
+        if (response.data) {
+          setOwnerDetails(response.data);
+        }
+      } catch (error) {
+        console.error('Error fetching owner details:', error);
       }
     } catch (error) {
-      console.error('Error fetching owner details:', error);
+      console.error('Error Fetching Data:: ', error);
     }
   };
 
+  // const fetchOwnerDetails = async () => {
+   
+  // };
+   
+
   useEffect(() => {
-    fetchOwnerDetails();
+  //   fetchOwnerDetails();
+    fetchCarData();
   }, );
 
   const bufferToBase64 = (buffer) => {
@@ -45,10 +61,9 @@ export default function CarDetails({ cars, onBackClick, userId }) {
 
   const handleBackClick = () => {
     setShowBookingDialog(false);
-    onBackClick();
-
-    const queryParams = new URLSearchParams(location.search);
-    queryParams.set('selectedCar', JSON.stringify(cars));
+    setCarDetails(null);
+    //const queryParams = new URLSearchParams(location.search);
+    // queryParams.set('selectedCar', JSON.stringify(cars));
    // localStorage.setItem('selectedCar', JSON.stringify(cars));
     navigate('/Cars');
   };
@@ -62,21 +77,21 @@ export default function CarDetails({ cars, onBackClick, userId }) {
     <div>
       <div className="selected">
         <div className="selected-container">
-          {cars ? (
+          {carDetails ? (
             <div className="selected-car-details">
               <br />
               <br />
-              <img src={bufferToBase64(cars.image)} alt={cars.Car_Type} />
+              <img src={bufferToBase64(carDetails.image)} alt={carDetails.Car_Type} />
               <div className="avail">
                 <br />
                 <div className="select">
-                  <p>Availability Status: {cars.Rental_Status}</p>
+                  <p>Availability Status: {carDetails.Rental_Status}</p>
                 </div>
                 <div className="select">
-                  <p>Price per Hour: {cars.Charges_Per_Hour}$</p>
+                  <p>Price per Hour: {carDetails.Charges_Per_Hour}$</p>
                 </div>
                 <div className='select'>
-                  <p>Location: {cars.Location}</p>
+                  <p>Location: {carDetails.Location}</p>
                 </div>
                 {ownerDetails && (
                   <div className="hidden">
@@ -95,9 +110,9 @@ export default function CarDetails({ cars, onBackClick, userId }) {
           )}
           {showBookingDialog && (
             <BookingDialog
-              hourlyRate={cars.Charges_Per_Hour}
-              carId={cars.Car_ID}
-              carData={cars}
+              hourlyRate={carDetails.Charges_Per_Hour}
+              carId={carDetails.Car_ID}
+              carData={carDetails}
               onBookingClick={handleBookingClick}
               isBookingClicked={isBookingClicked}
             />

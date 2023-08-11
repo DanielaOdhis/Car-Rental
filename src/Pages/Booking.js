@@ -7,20 +7,14 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
   const [pickupTime, setPickupTime] = useState('');
   const [bookingDate, setBookingDate] = useState('');
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const [profileData, setProfileData]=useState(null);
-
-
-
-  const handleCheckoutComplete = (email) => {
+  const userId=localStorage.getItem("loggedUser")
+  const handleCheckoutComplete = () => {
     const formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
     setTotalBill(hourlyRate);
 
-
     // add code to update the availability status here
           try {
-            const response = axios.get(`http://localhost:3004/api/userDetails/${email}`);
-            setProfileData(response.data);
-           axios.put(`http://localhost:3004/api/cars/${carData.Car_ID}`, {
+             axios.put(`http://localhost:3004/api/cars/${carData.Car_ID}`, {
               Rental_Status: 'Unavailable',
             });
             console.log('Availability status updated successfully.');
@@ -30,7 +24,7 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
     setShowPaymentOptions(false);
     axios.post('http://localhost:3004/api/bookings', {
       pickup_time: formattedPickupTime,
-      user_id: profileData.id,
+      user_id: userId,
       booking_date: bookingDate,
       car_id: carData.Car_ID,
       owner_id: carData.owner_ID,
@@ -48,14 +42,18 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
     setTotalBill(hourlyRate);
   };
   const handleBookClick = async () => {
+    const response = await axios.get(`http://localhost:3004/api/userDetails`);
+    const res= response.data;
+    console.log("prof:", res);
     if (!pickupTime || !bookingDate) {
       console.error('Missing required data for booking');
       return;
     }
-    if (!profileData || !profileData.id) {
-      console.error('Invalid profile data:', profileData);
-      return;
-    }
+    // if (!profileData || !profileData.id) {
+    //   console.log(profileData.id);
+    //   console.error('Invalid profile data:', profileData);
+    //   return;
+    // }
 
     if (!carData || !carData.Car_ID) {
       console.error('Invalid car data:', carData);
@@ -64,13 +62,13 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
 
     const formData = new FormData();
     formData.append('pickup_time', pickupTime);
-    formData.append('user_id', profileData.id);
+    formData.append('user_id', userId);
     formData.append('booking_date', bookingDate);
     formData.append('car_id', carData.Car_ID);
     formData.append('owner_id', carData.owner_ID);
 
     try {
-      const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${profileData.id}`, {
+      const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${userId}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },

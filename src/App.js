@@ -9,7 +9,7 @@ import Settings from './Pages/Settings.js';
 import Profile from './Pages/Profile.js';
 import axios from 'axios';
 //import BookingDialog from './Pages/Booking.js';
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+//import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import BookedCars from './Pages/BookedCars.js';
 import Forgot from './Pages/forgotPassword.js';
 import NotFound from "./Pages/NotFound.js";
@@ -24,14 +24,9 @@ export default function App() {
   const [profileData, setProfileData] = useState(null);
   //const [paymentOption, setPaymentOption] = useState('');
   const [totalBill, setTotalBill] = useState(0);
-  const [isBookingClicked, setIsBookingClicked] = useState(false);
+//const [isBookingClicked, setIsBookingClicked] = useState(false);
   const [showBookedCars, setShowBookedCars] = useState(false);
   //const [showForgot, setShowForgot] = useState(false);
-
-  const handleBackClick = () => {
-    setShowProfilePage(false);
-    setShowBookedCars(false);
-  };
 
   const handleSignup = async (formData) => {
     try {
@@ -55,7 +50,7 @@ export default function App() {
 
       await fetchProfileData(formData.email);
       onLogin(formData.email);
-     // localStorage.setItem('loggedInUser', JSON.stringify(formData));
+    //  localStorage.setItem('loggedInUser', JSON.stringify(formData.id));
     } catch (error) {
       console.error('Error fetching user:', error);
     }
@@ -66,13 +61,14 @@ export default function App() {
     setShowLoginForm(true);
     setUser(null);
     setProfileData(null);
-   // localStorage.removeItem('loggedInUser');
+    localStorage.removeItem('loggedInUser');
   };
 
   const fetchProfileData = async (email) => {
     try {
       const response = await axios.get(`http://localhost:3004/api/userDetails/${email}`);
       setProfileData(response.data);
+      localStorage.setItem('loggedUser', JSON.stringify(response.data.id));
       return response.data;
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -107,7 +103,7 @@ export default function App() {
   };
 
   useEffect(() => {
-   /* const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
     if (storedUser) {
       setIsLoggedIn(true);
       setUser(storedUser);
@@ -169,7 +165,8 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <div>
+     <div>
+       {/*
         {isLoggedIn ? (
           <>
             {showProfilePage && (
@@ -179,7 +176,6 @@ export default function App() {
                   profileData={profileData}
                   isLoggedIn={isLoggedIn}
                   showProfilePage={showProfilePage}
-                  onBackClick={handleBackClick}
                 />
               </div>
             )}
@@ -188,7 +184,6 @@ export default function App() {
               <div>
                 <BookedCars
                   user={user}
-                  onBackClick={handleBackClick}
                   profileData={profileData}
                   totalBill={totalBill}
                   initialOptions={initialOptions}
@@ -215,21 +210,37 @@ export default function App() {
                 </div>
               </div>
             )}
-          </>
-        ) : (
-          <>
+          </> 
+                  ) : ( */}
+        <>
+        <div>
+        <div className="settings-button" id="settings-button">
+  <button onClick={() => setShowSettings(!showSettings)}>
+    <img src={setting} alt="Settings" />
+  </button>
+  {showSettings && (
+    <Settings
+      onLogout={handleLogout}
+      onProfileClick={handleProfileClick}
+      onDeleteAccount={() => handleDeleteAccount(user.email)}
+      onBookedClick={handleBookedCarsClick}
+      user={user}
+    />
+  )}
+</div>
+        </div>
             <Routes>
               <Route path="/signup" element={<Signup onSignUp={handleSignup} />} />
               <Route path="/" element={<Login onLogin={handleLogin} />} />
               <Route path="/forgot-Password" element={<Forgot  />} />
               <Route path="/Cars" element={<Cars  />} />
-              <Route path="/Cars-Details" element={<CarDetails  profileData={profileData} onBackClick={handleBackClick} userId={user.id} /> }/>
-              <Route path="/Booked-Cars" element={<BookedCars user={user} onBackClick={handleBackClick} profileData={profileData} totalBill={totalBill} initialOptions={initialOptions}/>} />
-              <Route path="/profile" element={<Profile user={user} profileData={profileData} isLoggedIn={isLoggedIn} showProfilePage={showProfilePage} onBackClick={handleBackClick}  />} />
+              <Route path="/Car-Details" element={<CarDetails profileData={profileData}/> }/>
+              <Route path="/Booked-Cars" element={<BookedCars user={user} profileData={profileData} totalBill={totalBill} initialOptions={initialOptions}/>} />
+              <Route path="/profile" element={<Profile user={user} profileData={profileData} isLoggedIn={isLoggedIn} showProfilePage={showProfilePage}  />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </>
-        )}
+       {/* )} */}
       </div>
     </BrowserRouter>
   );

@@ -3,7 +3,7 @@ import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useNavigate } from 'react-router-dom';
 
-export default function BookedCars({ onBackClick, profileData, carData }) {
+export default function BookedCars({ profileData, carData }) {
   const [bookedCars, setBookedCars] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -187,7 +187,6 @@ const handleBackClick= () => {
 };
 
 const handleBack=()=>{
-  onBackClick();
   navigate('/Cars');
   //localStorage.removeItem('handleBookedCarsClick');
 }

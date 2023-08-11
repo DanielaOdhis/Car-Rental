@@ -6,7 +6,7 @@ const NotFound = () => {
 
   const navigate = useNavigate();
   const handleLogin = () => {
-    navigate('/');
+    navigate('/Cars');
   };
 
   return (
@@ -15,7 +15,7 @@ const NotFound = () => {
           <h1>Oops, something went wrong!</h1>
           <img src={NotFoundImage} alt="404" className="not-found-image" />
           <p>The page you are looking for does not exist.</p>
-          <button onClick={handleLogin}>Back to Login</button>
+          <button onClick={handleLogin}>Back to Cars</button>
         </div>
     </div>
   );

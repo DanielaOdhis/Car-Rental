@@ -23,7 +23,7 @@ export default function Logins({ onLogin }) {
       .then((response) => {
         console.log(response.data);
         onLogin(formData);
-      //  localStorage.setItem('loggedInUser', JSON.stringify(formData));
+        localStorage.setItem('loggedInUser', JSON.stringify(formData.id));
         navigate('/Cars');
       })
       .catch((error) => {
