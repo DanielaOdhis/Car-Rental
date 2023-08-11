@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
-import { Link } from 'react-router-dom';
 
 export default function BookingDialog({ hourlyRate, carId, profileData, carData, onBookingClick, isBookingClicked }) {
   const [totalBill, setTotalBill] = useState({hourlyRate});
@@ -119,7 +118,6 @@ export default function BookingDialog({ hourlyRate, carId, profileData, carData,
 
   return (
     <div>
-      <Link to="/Booking" className="link">
       {isBookingClicked && !showPaymentOptions && (
         <div className='pay'>
           <div>
@@ -175,7 +173,6 @@ export default function BookingDialog({ hourlyRate, carId, profileData, carData,
           </div>
         </div>
       )}
-      </Link>
     </div>
   );
 }

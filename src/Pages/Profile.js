@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Update from './Update.js';
 import { useNavigate } from 'react-router-dom';
 
@@ -7,8 +7,14 @@ const navigate=useNavigate();
 
 const handleBack=()=>{
   onBackClick();
-  navigate('/Cars')
+  navigate('/Cars');
+  localStorage.removeItem('profileData');
 }
+
+useEffect(() => {
+  localStorage.setItem('profileData', JSON.stringify(profileData));
+}, [profileData]);
+
   return (
     <div className='profile'>
       <h1>Profile</h1>

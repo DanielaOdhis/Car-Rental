@@ -17,7 +17,20 @@ export default function BookedCars({ onBackClick, profileData, carData }) {
     if (profileData && profileData.id) {
       fetchBookedCars(profileData.id);
     }
+
+   /* const storedBookedCars = JSON.parse(localStorage.getItem('handleBookedCarsClick'));
+    if (storedBookedCars) {
+      setBookedCars(storedBookedCars);
+    }*/
   }, [profileData]);
+
+  /*useEffect(() => {
+    if (bookedCars.length > 0) {
+      localStorage.setItem('handleBookedCarsClick', JSON.stringify(bookedCars));
+    } else {
+      localStorage.removeItem('handleBookedCarsClick');
+    }
+  }, [bookedCars]);*/
 
   const fetchBookedCars = async (userId) => {
     try {
@@ -176,6 +189,7 @@ const handleBackClick= () => {
 const handleBack=()=>{
   onBackClick();
   navigate('/Cars');
+  //localStorage.removeItem('handleBookedCarsClick');
 }
   return (
     <div>

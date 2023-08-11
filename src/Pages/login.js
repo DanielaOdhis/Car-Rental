@@ -23,7 +23,7 @@ export default function Logins({ onLogin }) {
       .then((response) => {
         console.log(response.data);
         onLogin(formData);
-        // Navigate to Cars page on successful login
+      //  localStorage.setItem('loggedInUser', JSON.stringify(formData));
         navigate('/Cars');
       })
       .catch((error) => {

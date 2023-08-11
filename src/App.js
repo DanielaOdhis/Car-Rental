@@ -63,6 +63,7 @@ export default function App() {
 
       await fetchProfileData(formData.email);
       onLogin(formData.email);
+     // localStorage.setItem('loggedInUser', JSON.stringify(formData));
     } catch (error) {
       console.error('Error fetching user:', error);
     }
@@ -74,6 +75,7 @@ export default function App() {
     setShowLoginForm(true);
     setUser(null);
     setProfileData(null);
+   // localStorage.removeItem('loggedInUser');
   };
 
   const fetchProfileData = async (email) => {
@@ -115,6 +117,29 @@ export default function App() {
   };
 
   useEffect(() => {
+   /* const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    if (storedUser) {
+      setIsLoggedIn(true);
+      setUser(storedUser);
+      fetchProfileData(storedUser.email);
+    }
+
+  /* const storedSelectedCar = JSON.parse(localStorage.getItem('selectedCar'));
+    if (storedSelectedCar) {
+      setSelectedCar(storedSelectedCar);
+    }
+
+    const storedProfileData = JSON.parse(localStorage.getItem('profileData'));
+    if (storedProfileData) {
+      setProfileData(storedProfileData);
+      setShowProfilePage(true);
+    }
+
+     const storedBookedCars = JSON.parse(localStorage.getItem('handleBookedCarsClick'));
+    if (storedBookedCars) {
+      setShowBookedCars(storedBookedCars);
+    }*/
+
     document.addEventListener('click', handleClickOutsideDropdown);
     return () => {
       document.removeEventListener('click', handleClickOutsideDropdown);
@@ -258,7 +283,6 @@ export default function App() {
               <Route path="/forgot-Password" element={<Forgot onBack={handleForgotLog} />} />
               <Route path="/Cars" element={<Cars onCarClick={handleCarClick} />} />
               <Route path="/Cars-Details" element={<CarDetails cars={selectedCar} profileData={profileData} onBackClick={handleBackClick} userId={user.id} /> }/>
-              <Route path="/Booking" element={ <BookingDialog onPayInPerson={handlePayInPerson} carData={selectedCar} profileData={profileData} onBookingClick={handleBookingClick}/>} />
               <Route path="/Booked-Cars" element={<BookedCars user={user} onBackClick={handleBackClick} profileData={profileData} totalBill={totalBill} initialOptions={initialOptions}/>} />
               <Route path="/profile" element={<Profile user={user} profileData={profileData} isLoggedIn={isLoggedIn} showProfilePage={showProfilePage} onBackClick={handleBackClick}  />} />
               <Route path="*" element={<NotFound />} />

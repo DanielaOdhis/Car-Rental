@@ -74,7 +74,7 @@ function Cars({ onCarClick }) {
           {filteredCars.length > 0 ? (
             filteredCars.map((car, index) => (
               <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
-                <Link to={`/Cars-Details/${car.Car_ID}`} key={index} className="link">
+                <Link to={`/Car-Details?carId=${car.Car_ID}`} key={index} className="link">
                 <h2>{car.Car_Type}</h2>
                 <div className="triangles-container">
                 <div className="triangle triangle-1">
