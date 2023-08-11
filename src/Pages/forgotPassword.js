@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Login from './login.js';
 import { useNavigate } from 'react-router-dom';
 
-export default function Forgot({ onBack }) {
+export default function Forgot() {
   const [email, setEmail] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [error, setError] = useState('');
@@ -23,7 +23,6 @@ export default function Forgot({ onBack }) {
   };
 
   const handleLoginClick = () => {
-    onBack();
     setShowForgot(false);
     navigate('/');
   };

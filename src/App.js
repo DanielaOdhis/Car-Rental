@@ -8,7 +8,7 @@ import Login from './Pages/login.js';
 import Settings from './Pages/Settings.js';
 import Profile from './Pages/Profile.js';
 import axios from 'axios';
-import BookingDialog from './Pages/Booking.js';
+//import BookingDialog from './Pages/Booking.js';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import BookedCars from './Pages/BookedCars.js';
 import Forgot from './Pages/forgotPassword.js';
@@ -16,27 +16,19 @@ import NotFound from "./Pages/NotFound.js";
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 export default function App() {
-  const [selectedCar, setSelectedCar] = useState(null);
   const [showLoginForm, setShowLoginForm] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showProfilePage, setShowProfilePage] = useState(false);
   const [user, setUser] = useState({ email: '' });
   const [profileData, setProfileData] = useState(null);
-  const [paymentOption, setPaymentOption] = useState('');
+  //const [paymentOption, setPaymentOption] = useState('');
   const [totalBill, setTotalBill] = useState(0);
   const [isBookingClicked, setIsBookingClicked] = useState(false);
   const [showBookedCars, setShowBookedCars] = useState(false);
-  const [showForgot, setShowForgot] = useState(false);
-
-  const handleCarClick = (car) => {
-    setSelectedCar(car);
-    setShowProfilePage(false);
-    setIsBookingClicked(false);
-  };
+  //const [showForgot, setShowForgot] = useState(false);
 
   const handleBackClick = () => {
-    setSelectedCar(null);
     setShowProfilePage(false);
     setShowBookedCars(false);
   };
@@ -71,7 +63,6 @@ export default function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    setSelectedCar(null);
     setShowLoginForm(true);
     setUser(null);
     setProfileData(null);
@@ -105,7 +96,6 @@ export default function App() {
   };
 
   const handleProfileClick = () => {
-    setSelectedCar(null);
     setShowProfilePage(true);
   };
 
@@ -150,14 +140,13 @@ export default function App() {
     console.log('User logged in:', email);
   };
 
-  const handlePayInPerson = (total) => {
+ /* const handlePayInPerson = (total) => {
     console.log('Pay in Person:', total);
     setPaymentOption('inPerson');
     setTotalBill(total);
   };
 
   const handleCheckoutComplete = () => {
-    setSelectedCar(null);
     setIsBookingClicked(false);
     setPaymentOption('');
     setTotalBill(0);
@@ -165,11 +154,10 @@ export default function App() {
 
   const handleBookingClick = () => {
     setIsBookingClicked(true);
-  }
+  }*/
 
   const handleBookedCarsClick = () => {
     setShowBookedCars(true);
-    setSelectedCar(null);
     setShowProfilePage(false);
   };
 
@@ -179,58 +167,11 @@ export default function App() {
     intent: "capture",
   };
 
-  const handleForgotLog = () => {
-    setShowForgot(false);
-    setShowLoginForm(true);
-  };
-
   return (
     <BrowserRouter>
       <div>
         {isLoggedIn ? (
           <>
-            {selectedCar && !showProfilePage && !showBookedCars ? (
-              <div>
-                <CarDetails cars={selectedCar} profileData={profileData} onBackClick={handleBackClick} userId={user.id} />
-                {!isBookingClicked && (
-                  <BookingDialog
-                    onPayInPerson={handlePayInPerson}
-                    hourlyRate={selectedCar.Charges_Per_Hour}
-                    carData={selectedCar}
-                    profileData={profileData}
-                    onBookingClick={handleBookingClick}
-                  />
-                )}
-                {isBookingClicked && paymentOption === 'viaApp' && totalBill > 0 && (
-                  <div>
-                    <h2>Total Bill: {totalBill}$</h2>
-                    <PayPalScriptProvider options={initialOptions}>
-                      <PayPalButtons
-                        createOrder={(data, actions) => {
-                          return actions.order.create({
-                            purchase_units: [
-                              {
-                                amount: {
-                                  currency_code: "USD",
-                                  value: totalBill,
-                                },
-                              },
-                            ],
-                          });
-                        }}
-                        onApprove={(data, actions) => {
-                          return actions.order.capture().then((details) => {
-                            console.log("Payment completed:", details);
-                            handleCheckoutComplete();
-                          });
-                        }}
-                      />
-                    </PayPalScriptProvider>
-                  </div>
-                )}
-              </div>
-            ) : null}
-
             {showProfilePage && (
               <div>
                 <Profile
@@ -255,9 +196,9 @@ export default function App() {
               </div>
             )}
 
-            {!selectedCar && !showProfilePage && !showBookedCars && (
+            {!showProfilePage && !showBookedCars && (
               <div>
-                <Cars onCarClick={handleCarClick} />
+                <Cars />
                 <div className="settings-button" id="settings-button">
                   <button onClick={() => setShowSettings(!showSettings)}>
                     <img src={setting} alt="Settings" />
@@ -280,9 +221,9 @@ export default function App() {
             <Routes>
               <Route path="/signup" element={<Signup onSignUp={handleSignup} />} />
               <Route path="/" element={<Login onLogin={handleLogin} />} />
-              <Route path="/forgot-Password" element={<Forgot onBack={handleForgotLog} />} />
-              <Route path="/Cars" element={<Cars onCarClick={handleCarClick} />} />
-              <Route path="/Cars-Details" element={<CarDetails cars={selectedCar} profileData={profileData} onBackClick={handleBackClick} userId={user.id} /> }/>
+              <Route path="/forgot-Password" element={<Forgot  />} />
+              <Route path="/Cars" element={<Cars  />} />
+              <Route path="/Cars-Details" element={<CarDetails  profileData={profileData} onBackClick={handleBackClick} userId={user.id} /> }/>
               <Route path="/Booked-Cars" element={<BookedCars user={user} onBackClick={handleBackClick} profileData={profileData} totalBill={totalBill} initialOptions={initialOptions}/>} />
               <Route path="/profile" element={<Profile user={user} profileData={profileData} isLoggedIn={isLoggedIn} showProfilePage={showProfilePage} onBackClick={handleBackClick}  />} />
               <Route path="*" element={<NotFound />} />

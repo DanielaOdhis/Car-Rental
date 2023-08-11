@@ -2,18 +2,24 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 
-export default function BookingDialog({ hourlyRate, carId, profileData, carData, onBookingClick, isBookingClicked }) {
+export default function BookingDialog({ hourlyRate, carId, carData, onBookingClick, isBookingClicked }) {
   const [totalBill, setTotalBill] = useState({hourlyRate});
   const [pickupTime, setPickupTime] = useState('');
   const [bookingDate, setBookingDate] = useState('');
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
+  const [profileData, setProfileData]=useState(null);
 
-  const handleCheckoutComplete = () => {
+
+
+  const handleCheckoutComplete = (email) => {
     const formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
     setTotalBill(hourlyRate);
 
+
     // add code to update the availability status here
           try {
+            const response = axios.get(`http://localhost:3004/api/userDetails/${email}`);
+            setProfileData(response.data);
            axios.put(`http://localhost:3004/api/cars/${carData.Car_ID}`, {
               Rental_Status: 'Unavailable',
             });

@@ -3,7 +3,7 @@ import axios from 'axios';
 import BookingDialog from './Booking.js';
 import { useNavigate, useLocation } from 'react-router-dom';
 
-export default function CarDetails({ cars, onBackClick, userId, profileData }) {
+export default function CarDetails({ cars, onBackClick, userId }) {
   const [ownerDetails, setOwnerDetails] = useState(null);
   const [showBookingDialog, setShowBookingDialog] = useState(false);
   const [isBookingClicked, setIsBookingClicked] = useState(false);
@@ -97,7 +97,6 @@ export default function CarDetails({ cars, onBackClick, userId, profileData }) {
             <BookingDialog
               hourlyRate={cars.Charges_Per_Hour}
               carId={cars.Car_ID}
-              profileData={profileData}
               carData={cars}
               onBookingClick={handleBookingClick}
               isBookingClicked={isBookingClicked}

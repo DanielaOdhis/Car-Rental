@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
+import CarDetails from './CarDetails';
 import { Link} from 'react-router-dom';
 
-function Cars({ onCarClick }) {
+function Cars() {
   const [cars, setCars] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
-
+  const[selectedCar, setSelectedCar]= useState(null);
   useEffect(() => {
     fetchCarData();
-  }, []);
+  }, );
 
   const fetchCarData = async () => {
     try {
@@ -20,6 +21,10 @@ function Cars({ onCarClick }) {
       console.error('Error Fetching Data', error);
       setLoading(false);
     }
+  };
+
+  const handleCarClick = (car) => {
+    setSelectedCar(car);
   };
 
   const bufferToBase64 = (buffer) => {
@@ -54,7 +59,11 @@ function Cars({ onCarClick }) {
 
   const filteredCars = cars.filter(filterCars);
 
+  const handleBackClick=()=>{
+    setSelectedCar(null);
+  }
   return (
+    !selectedCar ? (
     <div className="grid">
       <h1>Car Rental</h1>
       <div className="search-container">
@@ -73,7 +82,7 @@ function Cars({ onCarClick }) {
         <div className="grid-container">
           {filteredCars.length > 0 ? (
             filteredCars.map((car, index) => (
-              <div className="grid-item" key={index} onClick={() => onCarClick(car)}>
+              <div className="grid-item" key={index} onClick={() => handleCarClick(car)}>
                 <Link to={`/Car-Details?carId=${car.Car_ID}`} key={index} className="link">
                 <h2>{car.Car_Type}</h2>
                 <div className="triangles-container">
@@ -149,6 +158,9 @@ function Cars({ onCarClick }) {
         </div>
       )}
     </div>
+    ):(
+      <CarDetails cars={selectedCar} onBackClick={handleBackClick} />
+    )
   );
 }
 
