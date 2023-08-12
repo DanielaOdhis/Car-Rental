@@ -1,7 +1,7 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
-export default function Update({profileData}) {
+export default function Update() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [firstName, setFirstName] = useState('');
@@ -10,46 +10,50 @@ export default function Update({profileData}) {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
+  const [profileData, setProfileData] = useState(null);
+
+  const userId = localStorage.getItem('loggedUser');
 
   useEffect(() => {
-    fetchData();
-  }, );
-
-  const fetchData = async () => {
-    try {
-      if (profileData) {
-        setUsername(profileData.username);
-        setEmail(profileData.email);
-        setFirstName(profileData.firstName);
-        setLastName(profileData.lastName);
-        setPhoneNumber(profileData.phoneNumber);
-        setPassword(profileData.password);
-      }
-    } catch (error) {
-      console.log('Error fetching data:', error);
-    }
-  };
+    axios
+      .get(`http://localhost:3004/api/userDetails/${userId}`)
+      .then((response) => {
+        setProfileData(response.data);
+        const { username, email, firstName, lastName, phoneNumber, password } = response.data;
+        setUsername(username);
+        setEmail(email);
+        setFirstName(firstName);
+        setLastName(lastName);
+        setPhoneNumber(phoneNumber);
+        setPassword(password);
+      })
+      .catch((error) => {
+        console.error('Error fetching profile data:', error);
+      });
+  }, [userId]);
 
   const handleUpdateClick = async (e) => {
     e.preventDefault();
-
     if (!username || !password || !email || !firstName || !lastName || !phoneNumber) {
       setErrorMessage('Please fill in all fields.');
       return;
     }
 
-    try {
-      await axios.put(`http://localhost:3004/api/userDetails/${email}`, {
+    await axios
+      .put(`http://localhost:3004/api/userDetails/${userId}`, {
         username,
         email,
         firstName,
         lastName,
         phoneNumber,
         password,
+      })
+      .then((response) => {
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    } catch (error) {
-      console.log('Error updating data:', error);
-    }
   };
 
   const togglePasswordVisibility = () => {
@@ -65,7 +69,7 @@ export default function Update({profileData}) {
             <input
               type="text"
               placeholder="First Name"
-              value={firstName}
+              defaultValue={firstName}
               onChange={(e) => setFirstName(e.target.value)}
             />
             <br />
@@ -73,7 +77,7 @@ export default function Update({profileData}) {
             <input
               type="text"
               placeholder="Last Name"
-              value={lastName}
+              defaultValue={lastName}
               onChange={(e) => setLastName(e.target.value)}
             />
             <br />
@@ -81,7 +85,7 @@ export default function Update({profileData}) {
             <input
               type="text"
               placeholder="Telephone Number"
-              value={phoneNumber}
+              defaultValue={phoneNumber}
               onChange={(e) => setPhoneNumber(e.target.value)}
             />
             <br />
@@ -89,29 +93,28 @@ export default function Update({profileData}) {
             <input
               type="tel"
               placeholder="Username"
-              value={username}
+              defaultValue={username}
               onChange={(e) => setUsername(e.target.value)}
             />
             <br />
             <br />
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
+            <input type="email" placeholder="Email" value={email} readOnly />
             <br />
             <br />
             <input
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
-              value={password}
+              defaultValue={password}
               onChange={(e) => setPassword(e.target.value)}
             />
             <br />
             <br />
             <div>
-              <input type="checkbox" checked={showPassword} onChange={togglePasswordVisibility} />
+              <input
+                type="checkbox"
+                checked={showPassword}
+                onChange={togglePasswordVisibility}
+              />
               <label>Show Password</label>
             </div>
             {errorMessage && <p className="error">{errorMessage}</p>}

@@ -25,7 +25,7 @@ export default function CarDetails() {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-  
+
         if (response.data) {
           setOwnerDetails(response.data);
         }
@@ -38,9 +38,9 @@ export default function CarDetails() {
   };
 
   // const fetchOwnerDetails = async () => {
-   
+
   // };
-   
+
 
   useEffect(() => {
   //   fetchOwnerDetails();

@@ -30,7 +30,7 @@ useEffect(() => {
       )}
       <button onClick={handleBack}>Back</button>
       <hr/>
-      <Update profileData={profileData}/>
+      <Update />
     </div>
   );
 }
