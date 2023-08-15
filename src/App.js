@@ -68,7 +68,6 @@ export default function App() {
     try {
       const response = await axios.get(`http://localhost:3004/api/userDetails/${email}`);
       setProfileData(response.data);
-      localStorage.setItem('loggedUser', JSON.stringify(response.data.id));
       return response.data;
     } catch (error) {
       console.error('Error fetching profile data:', error);
@@ -103,29 +102,15 @@ export default function App() {
   };
 
   useEffect(() => {
-    const storedUser = JSON.parse(localStorage.getItem('loggedInUser'));
+    /* const storedUser = localStorage.getItem('loggedInUser');
+    const loggedInUser = localStorage.getItem('loggedUser');
+    console.log('Value to parse:', loggedInUser);
+  
     if (storedUser) {
       setIsLoggedIn(true);
-      setUser(storedUser);
-      fetchProfileData(storedUser.email);
-    }
-
-  /* const storedSelectedCar = JSON.parse(localStorage.getItem('selectedCar'));
-    if (storedSelectedCar) {
-      setSelectedCar(storedSelectedCar);
-    }
-
-    const storedProfileData = JSON.parse(localStorage.getItem('profileData'));
-    if (storedProfileData) {
-      setProfileData(storedProfileData);
-      setShowProfilePage(true);
-    }
-
-     const storedBookedCars = JSON.parse(localStorage.getItem('handleBookedCarsClick'));
-    if (storedBookedCars) {
-      setShowBookedCars(storedBookedCars);
-    }*/
-
+      setUser(JSON.parse(storedUser));
+      fetchProfileData(JSON.parse(storedUser).email); */
+  
     document.addEventListener('click', handleClickOutsideDropdown);
     return () => {
       document.removeEventListener('click', handleClickOutsideDropdown);
@@ -135,22 +120,6 @@ export default function App() {
   const onLogin = (email) => {
     console.log('User logged in:', email);
   };
-
- /* const handlePayInPerson = (total) => {
-    console.log('Pay in Person:', total);
-    setPaymentOption('inPerson');
-    setTotalBill(total);
-  };
-
-  const handleCheckoutComplete = () => {
-    setIsBookingClicked(false);
-    setPaymentOption('');
-    setTotalBill(0);
-  };
-
-  const handleBookingClick = () => {
-    setIsBookingClicked(true);
-  }*/
 
   const handleBookedCarsClick = () => {
     setShowBookedCars(true);
@@ -214,11 +183,12 @@ export default function App() {
                   ) : ( */}
         <>
         <div>
+          
         <div className="settings-button" id="settings-button">
-  <button onClick={() => setShowSettings(!showSettings)}>
+          <button onClick={() => setShowSettings(!showSettings)}>
     <img src={setting} alt="Settings" />
   </button>
-  {showSettings && (
+  { showSettings && (
     <Settings
       onLogout={handleLogout}
       onProfileClick={handleProfileClick}
@@ -228,6 +198,7 @@ export default function App() {
     />
   )}
 </div>
+
         </div>
             <Routes>
               <Route path="/signup" element={<Signup onSignUp={handleSignup} />} />
@@ -235,8 +206,8 @@ export default function App() {
               <Route path="/forgot-Password" element={<Forgot  />} />
               <Route path="/Cars" element={<Cars  />} />
               <Route path="/Car-Details" element={<CarDetails profileData={profileData}/> }/>
-              <Route path="/Booked-Cars" element={<BookedCars user={user} profileData={profileData} totalBill={totalBill} initialOptions={initialOptions}/>} />
-              <Route path="/profile" element={<Profile user={user} profileData={profileData} isLoggedIn={isLoggedIn} showProfilePage={showProfilePage}  />} />
+              <Route path="/Booked-Cars" element={<BookedCars profileData={profileData}/>} />
+              <Route path="/profile" element={<Profile />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </>

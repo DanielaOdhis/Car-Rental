@@ -1,18 +1,28 @@
-import React, {useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import Update from './Update.js';
 import { useNavigate } from 'react-router-dom';
 
-export default function Profile({ profileData }) {
-const navigate=useNavigate();
+export default function Profile() {
+  const [profileData, setProfileData] = useState(null);
+  const navigate = useNavigate();
+  const userId = localStorage.getItem("loggedUser");
 
-const handleBack=()=>{
-  navigate('/Cars');
-  localStorage.removeItem('profileData');
-}
+  const handleBackClick = () => {
+    navigate('/Cars');
+    localStorage.removeItem('profileData');
+  }
 
-useEffect(() => {
-  localStorage.setItem('profileData', JSON.stringify(profileData));
-}, [profileData]);
+  useEffect(() => {
+    axios.get(`http://localhost:3004/api/userDetails/${userId}`)
+      .then(response => {
+        setProfileData(response.data);
+        localStorage.setItem('profileData', JSON.stringify(response.data));
+      })
+      .catch(error => {
+        console.error('Error fetching profile data:', error);
+      });
+  }, [userId]);
 
   return (
     <div className='profile'>
@@ -28,8 +38,8 @@ useEffect(() => {
       ) : (
         <p>Loading profile data...</p>
       )}
-      <button onClick={handleBack}>Back</button>
-      <hr/>
+      <button onClick={handleBackClick}>Back</button>
+      <hr />
       <Update />
     </div>
   );

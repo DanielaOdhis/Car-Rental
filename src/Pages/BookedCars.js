@@ -3,26 +3,35 @@ import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useNavigate } from 'react-router-dom';
 
-export default function BookedCars({ profileData, carData }) {
+export default function BookedCars() {
   const [bookedCars, setBookedCars] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [selectedBooking, setSelectedBooking] = useState(null);
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const [totalBill, setTotalBill] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [profileData, setProfileData] = useState(null);
 
+  const userId = localStorage.getItem("loggedUser");
   const navigate=useNavigate();
 
   useEffect(() => {
-    if (profileData && profileData.id) {
-      fetchBookedCars(profileData.id);
+    axios.get(`http://localhost:3004/api/userDetails/${userId}`)
+      .then(response => {
+        setProfileData(response.data);
+        localStorage.setItem('profileData', JSON.stringify(response.data));
+      })
+      .catch(error => {
+        console.error('Error fetching profile data:', error);
+      });
+    if (profileData ) {
+      fetchBookedCars(profileData);
     }
 
    /* const storedBookedCars = JSON.parse(localStorage.getItem('handleBookedCarsClick'));
     if (storedBookedCars) {
       setBookedCars(storedBookedCars);
     }*/
-  }, [profileData]);
+  }, );
 
   /*useEffect(() => {
     if (bookedCars.length > 0) {
@@ -34,7 +43,7 @@ export default function BookedCars({ profileData, carData }) {
 
   const fetchBookedCars = async (userId) => {
     try {
-      const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${userId}`, {
+      const userResponse = await axios.get(`http://localhost:3004/api/userDetails/${userId.id}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -51,14 +60,14 @@ export default function BookedCars({ profileData, carData }) {
             const carDetailsResponse = await axios.get(`http://localhost:3004/api/cars/${bookedCar.car_id}`);
             const ownerDetailsResponse = await axios.get(`http://localhost:3004/api/ownerDetails/${carDetailsResponse.data[0].owner_ID}`);
 
-            const totalBillValue = (bookedCar.total_time - 1) * carDetailsResponse.data[0].Charges_Per_Hour;
-          setTotalBill(totalBillValue.toFixed(2));
+            const totalBillValue = (((bookedCar.total_time - 1) * carDetailsResponse.data[0].Charges_Per_Hour).toFixed(2));
             const carDetails = carDetailsResponse.data[0];
 
             return {
               ...bookedCar,
               car_details: carDetails,
               owner_details: ownerDetailsResponse.data,
+              totalBillValue: totalBillValue,
             };
           })
         );
@@ -118,7 +127,7 @@ export default function BookedCars({ profileData, carData }) {
       const createOrderData = {
         cars: {
           Charges_Per_Hour: {
-            hourlyRate: totalBill,
+            hourlyRate: selectedBooking.totalBillValue,
           },
         },
       };
@@ -133,7 +142,7 @@ export default function BookedCars({ profileData, carData }) {
           console.error('Error creating PayPal order:', error);
         });
     }
-  }, [totalBill, selectedBooking]);
+  }, [selectedBooking]);
 
   const handleCancelClick = (booking) => {
     setSelectedBooking(booking);
@@ -156,12 +165,12 @@ export default function BookedCars({ profileData, carData }) {
   const formatTimeInHours = (seconds) => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
-    const remainingSeconds = seconds % 60;
+    const remainingSeconds = Math.round(seconds % 60);
 
     return `${hours}h ${minutes}m ${remainingSeconds}s`;
   };
 
-  const handleCheckoutComplete = async () => {
+  const handleCheckoutComplete = async (bookedCar) => {
     try {
       if (selectedBooking) {
         await deleteBookedCar(selectedBooking.id);
@@ -169,7 +178,7 @@ export default function BookedCars({ profileData, carData }) {
       }
 
       setShowPaymentOptions(false);
-      setTotalBill(0);
+      bookedCar.totalBillValue=0;
 
     } catch (error) {
       console.error('Error handling checkout completion:', error);
@@ -178,12 +187,32 @@ export default function BookedCars({ profileData, carData }) {
 
   const handlePaymentCancel = () => {
     setShowPaymentOptions(false);
-    setTotalBill(0);
     setSelectedBooking(null);
   };
 const handleBackClick= () => {
   setShowPaymentOptions(false);
   setSelectedBooking(null);
+};
+
+const formatDate = (dateString) => {
+  const formattedDate = new Date(dateString).toLocaleDateString("en-US", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
+
+  return formattedDate;
+};
+
+const formatTime = (timeString) => {
+  const formattedTime = new Date(timeString).toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    second: "numeric",
+    hour12: true,
+  });
+
+  return formattedTime;
 };
 
 const handleBack=()=>{
@@ -207,11 +236,11 @@ const handleBack=()=>{
               </div>
               <p><b>Owner's User Name</b>: {booking.owner_details.username}</p>
               <p><b>Owner's Telephone</b>: {booking.owner_details.phoneNumber}</p>
-              <p><b>Booking Date</b>: {booking.booking_date}</p>
-              <p><b>Pickup Time</b>: {booking.pickup_time}</p>
+              <p><b>Booking Date</b>:  {formatDate(booking.booking_date)}</p>
+              <p><b>Pickup Time</b>: {formatTime(booking.pickup_time)}</p>
               <p><b>Time Elapsed</b>: {formatTimeInHours(booking.total_time * 3600)}</p>
               <div onClick={() => handleBooking(booking)}>
-                <p><b>Total Bill</b>: {totalBill}$</p>
+                <p><b>Total Bill</b>: {booking.totalBillValue}$</p>
               </div>
               {showPaymentOptions && selectedBooking && selectedBooking.id === booking.id && (
                 <div className="paypal-container">
@@ -224,7 +253,7 @@ const handleBack=()=>{
                               {
                                 amount: {
                                   currency_code: "USD",
-                                  value: totalBill,
+                                  value: booking.totalBillValue,
                                 },
                               },
                             ],
@@ -245,7 +274,7 @@ const handleBack=()=>{
               )}
             </div>
           ))}
-          <div>
+          <div className='top'>
             <button onClick={handleBack}>Back</button>
           </div>
         </div>
