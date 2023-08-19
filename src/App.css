@@ -39,7 +39,7 @@ h1 {
   align-items: center;
   position: relative;
   border-radius: 25px;
-  height: 500px;
+  height: 540px;
   flex-shrink: 0;
   background: linear-gradient(135deg, #4B4A48 0%, #070707 81.22%);
   box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.55);
@@ -82,7 +82,7 @@ margin-top: 30px;
 
 .top {
   position: absolute;
-  top: 0;
+  top: 80px;
   left: 0;
 }
 .triangle{
@@ -107,7 +107,7 @@ flex-shrink: 0;
 .triangle-3 {
 flex-shrink: 0;
   top: 85px;
-  right: -54.5px;
+  right: -64.5px;
 }
 .available{
   margin-top: 15px;
@@ -125,6 +125,23 @@ box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.25);
     -ms-border-radius: 25px;
      -o-border-radius: 25px;
 }
+.CarsB{
+  border-radius: 20px;
+  background: rgba(155, 128, 121, 0.20);
+  box-shadow: -38.66666793823242px 38.66666793823242px 38.66666793823242px 0px rgba(155, 128, 121, 0.20) inset, 38.66666793823242px -38.66666793823242px 38.66666793823242px 0px rgba(155, 128, 121, 0.20) inset, 0px 6px 12px 0px rgba(155, 128, 121, 0.75);
+  backdrop-filter: blur(9.666666984558105px);
+}
+.back{
+  display: flex;
+  background-color: #000;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: white;
+  position: absolute;
+  background-size: cover;
+  top: 0;
+}
 
 .booked-car-details {
   display: grid;
@@ -135,7 +152,20 @@ box-shadow: 0px 6px 12px 0px rgba(0, 0, 0, 0.25);
 
 .booked {
   text-align: center;
+  width: 450px;
   position: relative;
+  background: linear-gradient(180deg, #000 70.01%, #9B8079 100%);
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+
+.booked img{
+  border-radius: 15px;
+  width: 400px;
+  border: 1px solid #ECD7D7;
 }
 
 .selected {
@@ -260,7 +290,7 @@ button{
   cursor: pointer;
   border-radius: 10px;
 background: #000;
-box-shadow: 0px 19.93000030517578px 39.81999969482422px 0px rgba(0, 0, 0, 0.65), 0px 6.909999847412109px 6.909999847412109px 0px #FFADA9 inset, 0px -6.909999847412109px 6.909999847412109px 0px #000 inset;
+box-shadow: 0px 19.93000030517578px 39.81999969482422px 0px rgba(0, 0, 0, 0.25), 0px 6.909999847412109px 6.909999847412109px 0px #9B8079 inset, 0px -6.909999847412109px 6.909999847412109px 0px #000 inset;
   border: none;
   padding: 10px 20px;
   color: #FFF;
@@ -280,7 +310,7 @@ box-shadow: 0px 19.93000030517578px 39.81999969482422px 0px rgba(0, 0, 0, 0.65),
 }
 
 button:hover{
-  background-color: tomato;
+  background-color: #9B8079;
 }
 
 .signup-form input,
@@ -325,13 +355,45 @@ input {
   color: #000;
 }
 
+.signup-form button,
+.login-form button,
+.forgot button{
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+  background: #000;
+  box-shadow: 0px 19.93000030517578px 39.81999969482422px 0px rgba(0, 0, 0, 0.65), 0px 6.909999847412109px 6.909999847412109px 0px #FFADA9 inset, 0px -6.909999847412109px 6.909999847412109px 0px #000 inset;
+  border: none;
+  padding: 10px 20px;
+  color: #FFF;
+  text-align: center;
+  font-family: Average;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  transition: background-color 0.3s ease;
+  position: relative;
+  z-index: 1;
+  -webkit-transition: background-color 0.3s ease;
+  -moz-transition: background-color 0.3s ease;
+  -ms-transition: background-color 0.3s ease;
+  -o-transition: background-color 0.3s ease;
+}
+
+.signup-form button:hover,
+.login-form button:hover,
+.forgot button:hover{
+  background-color: tomato;
+}
+
 .error {
   color: red;
 }
 
 .settings-button {
-  position: fixed;
-  top: 10px;
+  position: absolute;
+  top: 20px;
   right: 10px;
   display: flex;
   align-items: center;
@@ -340,8 +402,11 @@ input {
 
 .settings-button button {
   cursor: pointer;
-  background-color: transparent;
+  border-radius: 10px;
+  background: #000;
+  box-shadow: 0px 19.93000030517578px 39.81999969482422px 0px rgba(0, 0, 0, 0.25), 0px 6.909999847412109px 6.909999847412109px 0px #9B8079 inset, 0px -6.909999847412109px 6.909999847412109px 0px #000 inset;
   border: none;
+  padding: 10px 20px;
 }
 
 .settings-button img {
@@ -351,8 +416,8 @@ input {
 
 .settings-dropdown {
   position: absolute;
-  top: 50px;
-  right: 10px;
+  top: 70px;
+  right: 0px;
   background-color: #f9f9f9;
   border: 1px solid #ddd;
   border-radius: 4px;
@@ -662,7 +727,7 @@ line-height: normal;
   width: 40px;
   height: 40px;
   border: 4px solid transparent;
-  border-top-color: #FFADA9;
+  border-top-color: black;
   border-radius: 50%;
   animation: wave 1s linear infinite;
   -webkit-animation: wave 1s linear infinite;
@@ -685,7 +750,7 @@ line-height: normal;
   width: 100%;
   height: 100%;
   border: 4px solid transparent;
-  border-top-color: #FF7C45;
+  border-top-color: #4B4A48;
   border-radius: 50%;
   animation: spin-reverse 1s linear infinite;
 }
@@ -703,7 +768,7 @@ line-height: normal;
   width: 100%;
   height: 100%;
   border: 4px solid transparent;
-  border-top-color: #D1506F;
+  border-top-color:  #9B8079;
   border-radius: 50%;
   animation: spin 2s linear infinite;
 }

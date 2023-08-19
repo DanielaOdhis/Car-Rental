@@ -220,15 +220,17 @@ const handleBack=()=>{
   //localStorage.removeItem('handleBookedCarsClick');
 }
   return (
-    <div>
-      <h1>Booked Cars</h1>
+    <div className="back">
       {loading ? (
         <div className="loading-container">
         <p className="loading-spinner">Loading...</p>
         </div>
       ) : bookedCars.length > 0 ? (
-        <div className='booked-car-details'>
+        <div>
+      <h1>Booked Cars</h1>
+      <div>
           {bookedCars.map((booking) => (
+            <div className='booked-car-details'>
             <div className='booked' key={booking.id}>
               <h2>{booking.car_details.Car_Type}</h2>
               <div onClick={() => handleCancelClick(booking)}>
@@ -273,10 +275,12 @@ const handleBack=()=>{
                 </div>
               )}
             </div>
+            </div>
           ))}
           <div className='top'>
             <button onClick={handleBack}>Back</button>
           </div>
+        </div>
         </div>
       ) : (
         <div>
