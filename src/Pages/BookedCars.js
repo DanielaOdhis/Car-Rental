@@ -60,6 +60,7 @@ export default function BookedCars() {
             const carDetailsResponse = await axios.get(`http://localhost:3004/api/cars/${bookedCar.car_id}`);
             const ownerDetailsResponse = await axios.get(`http://localhost:3004/api/ownerDetails/${carDetailsResponse.data[0].owner_ID}`);
 
+            const total_time=bookedCar.total_time;
             const totalBillValue = (((bookedCar.total_time - 1) * carDetailsResponse.data[0].Charges_Per_Hour).toFixed(2));
             const carDetails = carDetailsResponse.data[0];
 
@@ -68,6 +69,7 @@ export default function BookedCars() {
               car_details: carDetails,
               owner_details: ownerDetailsResponse.data,
               totalBillValue: totalBillValue,
+              total_time: total_time,
             };
           })
         );
@@ -232,6 +234,7 @@ const handleBack=()=>{
           {bookedCars.map((booking) => (
             <div className='booked-car-details'>
             <div className='booked' key={booking.id}>
+            <div className="CarsB">
               <h2>{booking.car_details.Car_Type}</h2>
               <div onClick={() => handleCancelClick(booking)}>
                 <img src={bufferToBase64(booking.car_details.image)} alt={booking.car_details.Car_Type} />
@@ -243,6 +246,7 @@ const handleBack=()=>{
               <p><b>Time Elapsed</b>: {formatTimeInHours(booking.total_time * 3600)}</p>
               <div onClick={() => handleBooking(booking)}>
                 <p><b>Total Bill</b>: {booking.totalBillValue}$</p>
+              </div>
               </div>
               {showPaymentOptions && selectedBooking && selectedBooking.id === booking.id && (
                 <div className="paypal-container">
@@ -288,9 +292,9 @@ const handleBack=()=>{
           <button onClick={handleBack}>Back</button>
         </div>
       )}
-      {showConfirmation && (
+      {showConfirmation && selectedBooking && selectedBooking.total_time < 0 &&(
         <div className="confirmation-modal">
-          <p>You're about to cancel this order. Are you sure?</p>
+          <p>You're about to cancel this order. <br />Are you sure?</p>
           <button onClick={confirmCancel}>Confirm</button>
           <button onClick={cancelCancel}>Cancel</button>
         </div>
