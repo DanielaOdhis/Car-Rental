@@ -31,7 +31,7 @@ export default function Settings({ onLogout, onProfileClick, onDeleteAccount, us
   return (
     <div>
       <div className="settings-dropdown">
-        <ul>
+         <ul>
           <li onClick={handleProfile}>Profile</li>
           <li onClick={handleBook}>Booked Cars</li>
           <li onClick={handleLogOut}>Log Out</li>
