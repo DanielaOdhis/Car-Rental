@@ -7,6 +7,7 @@ import Signup from './Pages/signup.js';
 import Login from './Pages/login.js';
 import Settings from './Pages/Settings.js';
 import Profile from './Pages/Profile.js';
+import Chats from './Pages/chats.js';
 import axios from 'axios';
 //import BookingDialog from './Pages/Booking.js';
 //import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
@@ -220,6 +221,7 @@ export default function App() {
               <Route path="/Car-Details" element={<CarDetails profileData={profileData}/> }/>
               <Route path="/Booked-Cars" element={<BookedCars profileData={profileData}/>} />
               <Route path="/profile" element={<Profile />} />
+              <Route path="/chats" element={<Chats />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </>
