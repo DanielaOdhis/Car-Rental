@@ -9,6 +9,7 @@ const Chats = () => {
   const [showInputField, setShowInputField] = useState(false);
   const [inputText, setInputText] = useState("");
   const [Ids, setIds]=useState([]);
+  const [allChats, setAllChats] = useState([]);
 
   const userId = localStorage.getItem("loggedUser");
   console.log("User Id:", userId);
@@ -34,27 +35,42 @@ const Chats = () => {
     .catch(error => console.error('Error fetching chat data:', error));
 }, []);
 
-  const socket = new WebSocket(`ws://localhost:9600/ws/${userId}`);
+const socket = new WebSocket(`ws://localhost:9600/ws/${userId}`);
+
+useEffect(() => {
   // Connection opened
-  socket.onopen=(event)=>{
+  socket.onopen = (event) => {
     socket.send(JSON.stringify(Ids));
-    console.log("connection successful",event);
-  event.preventDefault();
-}
+    console.log('Connection successful', event);
+  };
+
+  // Handle incoming messages
+  socket.onmessage = (event) => {
+    console.log('Message from server: ', event.data);
+    const msg = JSON.parse(event.data);
+    if ('message' in msg) {
+      console.log('Received Message:', msg);
+      setAllChats((prevChats) => [...prevChats, msg]);
+    } else {
+      console.log('Online status: ', msg);
+    }
+  };
+},);
  //const clientID = "101a";
  let recepientId = queryParams.get('user_Id');
  console.log("Recipient ID:", recepientId);
 
-  socket.onmessage=(event) => {
+  /*socket.onmessage=(event) => {
     console.log("Message from server: ", event.data);
     const msg=JSON.parse(event.data);
     if ('message' in msg){
-    console.log("alaaa", msg);
+      console.log("Received Message:", msg);
+      setAllChats((prevChats) => [...prevChats, msg]);
     }else{
       console.log("online status: ", msg)
     }
     event.preventDefault();
-  };
+  };*/
 
 
     useEffect(() => {
@@ -93,13 +109,19 @@ const Chats = () => {
   };
 
   const handleSendClick = () => {
+
     if (inputText) {
        console.log("User typed:", inputText);
             // create a new message object
          let message = {
            recepientId: recepientId,
            message: inputText.trim(),
-         };
+         }; console.log("Sent Message:", message);
+  console.log("User Id:", userId);
+  console.log("recepientId is: ", userId)
+         // Add the sent message to the allChats state
+         setAllChats((prevChats) => [...prevChats, message]);
+         console.log("Mmmmh:", allChats)
          // convert the message object to JSON and send it to the server
          socket.send(JSON.stringify(message));
        setInputText("");
@@ -233,17 +255,7 @@ const Chats = () => {
             className="input"
             value={inputText}
             onChange={handleInputChange}
-            onKeyDown={(e)=>{ if(e.key === 'Enter'){if(e.target.value.trim() !==""){
-           // create a new message object
-        let message = {
-          recepientId: recepientId,
-          message: e.target.value.trim(),
-        };
-        // convert the message object to JSON and send it to the server
-        socket.send(JSON.stringify(message));
-        e.preventDefault();
-          // socket.send(e.target.value.trim())};
-          e.target.value=""} } }}
+            onKeyDown={handleInputKeyPress}
           onKeyPress={handleInputKeyPress}/>
            {inputText && (
               <svg
