@@ -9,7 +9,6 @@ const Chats = () => {
   const [showInputField, setShowInputField] = useState(false);
   const [inputText, setInputText] = useState("");
   const [Ids, setIds]=useState([]);
-  const [allChats, setAllChats] = useState([]);
 
   const userId = localStorage.getItem("loggedUser");
   console.log("User Id:", userId);
@@ -23,7 +22,11 @@ const Chats = () => {
     .then(response => response.json())
     .then(data => {
       chatDataRef.current = data;
-      console.log("Chats: ", chatDataRef.current);
+      let testMessage = {senderId:1, message:"broooo", "status":"delivered","time":"8:11 am"};
+       console.log("ChatDataRef: ", chatDataRef);
+      console.log("Chats: ", chatDataRef.current[0].messages.push(testMessage));
+      console.log("Chats: ", chatDataRef.current[0].messages);
+      console.log("Chats Type: ", typeof(chatDataRef.current));
       const userIds = data.map(chat => chat.userId);
     console.log("UserIds:", userIds);
     setIds(userIds);
@@ -35,43 +38,41 @@ const Chats = () => {
     .catch(error => console.error('Error fetching chat data:', error));
 }, []);
 
-const socket = new WebSocket(`ws://localhost:9600/ws/${userId}`);
-
-useEffect(() => {
+  const socket = new WebSocket(`ws://localhost:9600/ws/${userId}`);
   // Connection opened
-  socket.onopen = (event) => {
+  socket.onopen=(event)=>{
     socket.send(JSON.stringify(Ids));
-    console.log('Connection successful', event);
-  };
-
-  // Handle incoming messages
-  socket.onmessage = (event) => {
-    console.log('Message from server: ', event.data);
-    const msg = JSON.parse(event.data);
-    if ('message' in msg) {
-      console.log('Received Message:', msg);
-      setAllChats((prevChats) => [...prevChats, msg]);
-    } else {
-      console.log('Online status: ', msg);
-    }
-  };
-},);
+    console.log("connection successful",event);
+  event.preventDefault();
+}
  //const clientID = "101a";
  let recepientId = queryParams.get('user_Id');
  console.log("Recipient ID:", recepientId);
 
-  /*socket.onmessage=(event) => {
-    console.log("Message from server: ", event.data);
-    const msg=JSON.parse(event.data);
-    if ('message' in msg){
-      console.log("Received Message:", msg);
-      setAllChats((prevChats) => [...prevChats, msg]);
-    }else{
-      console.log("online status: ", msg)
-    }
-    event.preventDefault();
-  };*/
+ socket.onmessage=(event) => {
+  console.log("Message from server: ", event.data);
+  const msg=JSON.parse(event.data);
+  if ('message' in msg){
+  console.log("alaaa", msg);
+const msgUpdate = {
+  senderId: msg.senderId,
+  message: msg.message,
+  time:new Date(msg.time).toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", hour12: true }),
+};
+for (const chat in chatDataRef.current){
+  console.log("chatDataRef UID", chatDataRef.current[chat].userId);
+   console.log("And the recepientId: ",recepientId);
+if(chatDataRef.current[chat].userId==recepientId){
+   console.log("Updated:...",chatDataRef.current[chat].messages.push(msgUpdate))
 
+break;
+}
+}
+}else{
+  console.log("online status: ", msg)
+}
+event.preventDefault();
+};
 
     useEffect(() => {
     const handleEscapeKeyPress = (e) => {
@@ -109,26 +110,34 @@ useEffect(() => {
   };
 
   const handleSendClick = () => {
-
     if (inputText) {
        console.log("User typed:", inputText);
+       console.log("lee:", userId)
             // create a new message object
          let message = {
+          senderId: userId,
            recepientId: recepientId,
            message: inputText.trim(),
-         }; console.log("Sent Message:", message);
-  console.log("User Id:", userId);
-  console.log("recepientId is: ", userId)
-         // Add the sent message to the allChats state
-         setAllChats((prevChats) => [...prevChats, message]);
-         console.log("Mmmmh:", allChats)
-         // convert the message object to JSON and send it to the server
+           status: 'sent',
+         };
+          console.log("Chat Data Ref:" ,chatDataRef)
+
          socket.send(JSON.stringify(message));
+        let msgUpdate = {
+            senderId: message.senderId, "message": message.message, status:message.status,time:new Date().toLocaleTimeString([], { hour: '2-digit', minute: "2-digit", hour12: true })
+        };
+       for (const chat in chatDataRef.current){
+        console.log("We got the chat", chat)
+        if(chatDataRef.current[chat].userId==recepientId){
+          chatDataRef.current[chat].messages.push(msgUpdate);
+          break;
+          }
+}
        setInputText("");
      }
    }
 
-  const handleInputKeyPress = (e) => {
+   const handleInputKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSendClick();
     }
@@ -151,7 +160,7 @@ useEffect(() => {
                 <h3 className="username">{chat.username}</h3>
                 <p
                   className={`message ${
-                    chat.messages[chat.messages.length - 1].senderId === 1 ? 'sent' : 'received'
+                    chat.messages[chat.messages.length - 1].senderId === userId ? 'sent' : 'received'
                   }`}
                 >
                   <span className="clickable-message"
@@ -187,9 +196,9 @@ useEffect(() => {
         <h1>Let's Chat</h1>
          <div className="cht">
         {selectedProfileChats.map((message, index) => (
-          <div key={index} className={`chat-message ${message.senderId === 1 ? 'S-sent' : 'R-received'}`}>
-           <div className={message.senderId === 1 ? "me" : "you"}>
-  {message.senderId === 1 ? (
+          <div key={index} className={`chat-message ${message.senderId === userId ? 'S-sent' : 'R-received'}`}>
+           <div className={message.senderId === userId ? "me" : "you"}>
+  {message.senderId === userId ? (
     <div>
   <svg xmlns="http://www.w3.org/2000/svg" width="224" height="72" viewBox="0 0 224 72" fill="none">
   <g filter="url(#filter0_i_14_93)">
@@ -241,6 +250,9 @@ useEffect(() => {
     <text x="10" y="40" fill="white" text-wrap="wrap" >
       {message.message}
     </text>
+    <text x="10" y="70" fill="white" className="message-time">
+        {message.time}
+      </text>
   </svg>
   )}
 </div>
