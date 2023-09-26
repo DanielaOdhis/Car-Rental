@@ -48,7 +48,7 @@ const Chats = () => {
   event.preventDefault();
 }
  //const clientID = "101a";
- let recepientId = queryParams.get('user_Id');
+ const recepientId = queryParams.get('user_Id');
  console.log("Recipient ID:", recepientId);
 
  socket.onmessage=(event) => {
@@ -113,6 +113,7 @@ event.preventDefault();
         setShowProfilePopup(false);
         setSelectedProfileChats([]);
         setShowInputField(false);
+        setSelectedChatUser(false);
         navigate('/chats');
         setInputText("");
       }
@@ -132,12 +133,13 @@ event.preventDefault();
      console.log("Chat Clicked::" , profileChats);
      navigate(`/chats?user_Id=${Chats.userId}`);
      for (const chat in chatDataRef.current){
-      console.log("this should log once the chat is clicked")
+      console.log("this should log once the chat is clicked");
+console.log("the recepientId of the clicked chat is: ", recepientId)
       if(chatDataRef.current[chat].userId==recepientId){
         console.log("found the correct chat");
         for (const message in chatDataRef.current[chat].messages){
-    console.log("Current msg status",chatDataRef.current[chat].messages[message].status );
-    if(chatDataRef.current[chat].messages[message].status == undefined){
+    console.log("Current msg status",chatDataRef.current[chat].messages[message].status );     
+     if(chatDataRef.current[chat].messages[message].status == undefined){
             console.log("the message is",chatDataRef.current[chat].messages[message]);
             const msg_status_update={
               recepientId: userId,
