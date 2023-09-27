@@ -40,7 +40,7 @@ const Chats = () => {
     .catch(error => console.error('Error fetching chat data:', error));
 }, []);
 
-  const socket = new WebSocket(`ws://localhost:9600/ws/${userId}`);
+  const socket = new WebSocket(`ws://54.173.222.55:9600:9600/ws/${userId}`);
   // Connection opened
   socket.onopen=(event)=>{
     socket.send(JSON.stringify(Ids));
@@ -48,7 +48,8 @@ const Chats = () => {
   event.preventDefault();
 }
  //const clientID = "101a";
- const recepientId = queryParams.get('user_Id');
+ const recepientId =
+  queryParams.get('user_Id');
  console.log("Recipient ID:", recepientId);
 
  socket.onmessage=(event) => {

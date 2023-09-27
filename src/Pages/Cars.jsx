@@ -7,7 +7,7 @@ function Cars() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const[selectedCar, setSelectedCar]= useState(null);
-  const [currentPage, setCurrentPage] = useState(1);
+  //const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchCarData();
@@ -15,7 +15,7 @@ function Cars() {
 
   const fetchCarData = async () => {
     try {
-      const response = await fetch(`http://localhost:3004/api/cars?page=${currentPage}`);
+      const response = await fetch(`http://localhost:3004/api/cars`);
       const data = await response.json();
       setCars(data);
       console.log("Cars:", data);
@@ -66,7 +66,7 @@ function Cars() {
     !selectedCar ? (
     <div className="grid">
       <h1>Car Rental</h1>
-      <div className="pagination">
+      {/*<div className="pagination">
       <button
         onClick={() => setCurrentPage(currentPage - 1)}
         disabled={currentPage === 1}
@@ -81,7 +81,7 @@ function Cars() {
         Next
       </button>
       <button onClick={() => setCurrentPage(1)}>Show All</button>
-    </div>
+    </div>*/}
       <div className="search-container">
         <div>
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">
