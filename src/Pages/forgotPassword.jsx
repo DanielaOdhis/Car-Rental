@@ -10,8 +10,6 @@ export default function Forgot() {
 
   const navigate= useNavigate();
   const handleSubmit = (e) => {
-    e.preventDefault();
-
     if (!email) {
       setError('Please enter your email.');
       return;
@@ -20,6 +18,7 @@ export default function Forgot() {
 
     setEmail('');
     setError('');
+     e.preventDefault();
   };
 
   const handleLoginClick = () => {
@@ -46,7 +45,7 @@ export default function Forgot() {
                 type="email"
                 placeholder="Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => setEmail(e.target.value); e.preventDefault();}
               />
               <br /><br />
               {error && <p className="error-message">{error}</p>}
