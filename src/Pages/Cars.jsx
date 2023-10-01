@@ -7,7 +7,6 @@ function Cars() {
   const [searchQuery, setSearchQuery] = useState('');
   const [loading, setLoading] = useState(true);
   const[selectedCar, setSelectedCar]= useState(null);
-  //const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     fetchCarData();
@@ -21,7 +20,6 @@ function Cars() {
       setCars(data);
       console.log("Cars:", data);
       setLoading(false);
-      //response.preventDefault();
     } catch (error) {
       console.error('Error Fetching Data', error);
       setLoading(false);
@@ -30,7 +28,6 @@ function Cars() {
 
   const handleCarClick = (car) => {
     setSelectedCar(car);
-    //car.preventDefault();
   };
 
   const bufferToBase64 = (buffer) => {
@@ -69,22 +66,6 @@ function Cars() {
     !selectedCar ? (
     <div className="grid">
       <h1>Car Rental</h1>
-      {/*<div className="pagination">
-      <button
-        onClick={() => setCurrentPage(currentPage - 1)}
-        disabled={currentPage === 1}
-      >
-        Previous
-      </button>
-      <span>{`Showing ${((currentPage - 1) * 20) + 1}-${(currentPage * 20) <= cars.length ? (currentPage * 20) : cars.length} of ${cars.length} cars`}</span>
-      <button
-        onClick={() => setCurrentPage(currentPage + 1)}
-        disabled={cars.length <= currentPage * 20}
-      >
-        Next
-      </button>
-      <button onClick={() => setCurrentPage(1)}>Show All</button>
-    </div>*/}
       <div className="search-container">
         <div>
         <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" fill="none">

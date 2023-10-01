@@ -25,7 +25,7 @@ export default function CarDetails() {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-
+        
         if (response.data) {
           setOwnerDetails(response.data);
         }
@@ -37,13 +37,7 @@ export default function CarDetails() {
     }
   };
 
-  // const fetchOwnerDetails = async () => {
-
-  // };
-
-
   useEffect(() => {
-  //   fetchOwnerDetails();
     fetchCarData();
   }, );
 
@@ -62,9 +56,6 @@ export default function CarDetails() {
   const handleBackClick = () => {
     setShowBookingDialog(false);
     setCarDetails(null);
-    //const queryParams = new URLSearchParams(location.search);
-    // queryParams.set('selectedCar', JSON.stringify(cars));
-   // localStorage.setItem('selectedCar', JSON.stringify(cars));
     navigate('/Cars');
   };
 

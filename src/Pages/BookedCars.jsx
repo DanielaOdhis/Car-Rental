@@ -27,19 +27,8 @@ export default function BookedCars() {
       fetchBookedCars(profileData);
     }
 
-   /* const storedBookedCars = JSON.parse(localStorage.getItem('handleBookedCarsClick'));
-    if (storedBookedCars) {
-      setBookedCars(storedBookedCars);
-    }*/
   }, );
 
-  /*useEffect(() => {
-    if (bookedCars.length > 0) {
-      localStorage.setItem('handleBookedCarsClick', JSON.stringify(bookedCars));
-    } else {
-      localStorage.removeItem('handleBookedCarsClick');
-    }
-  }, [bookedCars]);*/
 
   const fetchBookedCars = async (userId) => {
     try {
@@ -48,6 +37,7 @@ export default function BookedCars() {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
+      
 
       const user = userResponse.data;
 
@@ -219,7 +209,6 @@ const formatTime = (timeString) => {
 
 const handleBack=()=>{
   navigate('/Cars');
-  //localStorage.removeItem('handleBookedCarsClick');
 }
   return (
     <div className="back">

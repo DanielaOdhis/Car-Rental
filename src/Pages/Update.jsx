@@ -18,6 +18,7 @@ export default function Update() {
     axios
       .get(`http://localhost:3004/api/userDetails/${userId}`)
       .then((response) => {
+        response.preventDefault();
         setProfileData(response.data);
         const { username, email, firstName, lastName, phoneNumber, password } = response.data;
         setUsername(username);
@@ -49,6 +50,7 @@ export default function Update() {
         password,
       })
       .then((response) => {
+        response.preventDefault();
         console.log(response.data);
       })
       .catch((error) => {
@@ -70,7 +72,7 @@ export default function Update() {
               type="text"
               placeholder="First Name"
               defaultValue={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              onChange={(e) => {e.preventDefault();setFirstName(e.target.value)}}
             />
             <br />
             <br />
@@ -78,7 +80,7 @@ export default function Update() {
               type="text"
               placeholder="Last Name"
               defaultValue={lastName}
-              onChange={(e) => setLastName(e.target.value)}
+              onChange={(e) => {e.preventDefault();setLastName(e.target.value)}}
             />
             <br />
             <br />
@@ -86,7 +88,7 @@ export default function Update() {
               type="text"
               placeholder="Telephone Number"
               defaultValue={phoneNumber}
-              onChange={(e) => setPhoneNumber(e.target.value)}
+              onChange={(e) => {e.preventDefault();setPhoneNumber(e.target.value)}}
             />
             <br />
             <br />
@@ -94,7 +96,7 @@ export default function Update() {
               type="tel"
               placeholder="Username"
               defaultValue={username}
-              onChange={(e) => setUsername(e.target.value)}
+              onChange={(e) => {e.preventDefault();setUsername(e.target.value)}}
             />
             <br />
             <br />
@@ -105,7 +107,7 @@ export default function Update() {
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               defaultValue={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {e.preventDefault();setPassword(e.target.value)}}
             />
             <br />
             <br />

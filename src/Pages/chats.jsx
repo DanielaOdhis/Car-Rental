@@ -3,7 +3,6 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import {v4 as uuidv4} from 'uuid';
 
 const Chats = () => {
- // let chat_data = [];
   const chatDataRef = useRef([]);
   const [selectedProfileChats, setSelectedProfileChats] = useState([]);
   const [showProfilePopup, setShowProfilePopup] = useState(false);
@@ -17,7 +16,6 @@ const Chats = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
- // const user__Id = localStorage.getItem('user_Id');
 
  useEffect(() => {
   fetch('/chats.json')
@@ -47,7 +45,6 @@ const Chats = () => {
     console.log("connection successful",event);
   event.preventDefault();
 }
- //const clientID = "101a";
  const recepientId =
   queryParams.get('user_Id');
  console.log("Recipient ID:", recepientId);

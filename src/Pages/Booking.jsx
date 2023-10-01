@@ -49,11 +49,6 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
       console.error('Missing required data for booking');
       return;
     }
-    // if (!profileData || !profileData.id) {
-    //   console.log(profileData.id);
-    //   console.error('Invalid profile data:', profileData);
-    //   return;
-    // }
 
     if (!carData || !carData.Car_ID) {
       console.error('Invalid car data:', carData);
