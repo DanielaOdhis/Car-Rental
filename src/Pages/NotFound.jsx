@@ -6,7 +6,7 @@ const NotFound = () => {
 
   const navigate = useNavigate();
   const handleLogin = () => {
-    navigate('/Cars');
+    navigate('/My-Cars');
   };
 
   return (

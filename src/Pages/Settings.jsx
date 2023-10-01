@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import {useNavigate} from 'react-router-dom';
 
-export default function Settings({ onLogout, onProfileClick, onDeleteAccount, user, onBookedClick }) {
+export default function Settings({ onLogout, onProfileClick, onDeleteAccount, user, onUpload, onBookedClick }) {
   const [showPrompt, setShowPrompt] = useState(false);
 
   const navigate=useNavigate();
+
   const handlePrompt = () => {
     setShowPrompt(true);
   };
@@ -14,33 +15,39 @@ export default function Settings({ onLogout, onProfileClick, onDeleteAccount, us
   };
 
   const handleProfile=()=>{
-    onProfileClick();
     navigate('/profile');
+    onProfileClick();
   }
 
-  const handleLogOut=()=>{
-    onLogout();
+  const handleUpload =()=>{
+    navigate('/uploads');
+    onUpload();
+  }
+
+  const logOut = () => {
     navigate('/');
+    onLogout();
   }
 
-  const handleBook=()=>{
-    onBookedClick();
+  const handleBook =()=>{
     navigate('/Booked-Cars');
+    onBookedClick();
   }
 
-  const handleChats=()=>{
+  const handleChats = () => {
     navigate('/chats');
   }
 
   return (
     <div>
       <div className="settings-dropdown">
-         <ul>
+        <ul>
           <li onClick={handleProfile}>Profile</li>
+          <li onClick={handleUpload}>Upload Cars</li>
           <li onClick={handleBook}>Booked Cars</li>
-          <li onClick={handleLogOut}>Log Out</li>
-          <li onClick={handlePrompt}>Delete Account</li>
           <li onClick={handleChats}>Chats</li>
+          <li onClick={logOut}>Log Out</li>
+          <li onClick={handlePrompt}>Delete Account</li>
         </ul>
       </div>
       {showPrompt && (

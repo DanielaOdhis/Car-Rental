@@ -3,18 +3,20 @@ import axios from 'axios';
 import Update from './Update.jsx';
 import { useNavigate } from 'react-router-dom';
 
-export default function Profile() {
+export default function Profile({ onBackClick }) {
   const [profileData, setProfileData] = useState(null);
   const navigate = useNavigate();
   const userId = localStorage.getItem("loggedUser");
 
-  const handleBackClick = () => {
-    navigate('/Cars');
+  const handleBackClick = (e) => {
+    onBackClick();
+    navigate('/My-Cars');
     localStorage.removeItem('profileData');
+   // e.preventDefault();
   }
 
-  useEffect(() => {
-    axios.get(`http://localhost:3004/api/userDetails/${userId}`)
+  useEffect((e) => {
+    axios.get(`http://localhost:3004/api/ownerDetails/${userId}`)
       .then(response => {
         setProfileData(response.data);
         localStorage.setItem('profileData', JSON.stringify(response.data));
@@ -22,6 +24,7 @@ export default function Profile() {
       .catch(error => {
         console.error('Error fetching profile data:', error);
       });
+     // e.preventDefault();
   }, [userId]);
 
   return (

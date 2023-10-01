@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import Login from './login.jsx';
 import { useNavigate } from 'react-router-dom';
 
 export default function Signup({ onSignUp }) {
@@ -11,16 +10,15 @@ export default function Signup({ onSignUp }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
-  const [showSignUpForm, setSignUpForm] = useState(true);
 
-  const navigate= useNavigate();
-
+  const navigate = useNavigate();
   const handleFormSubmit = (e) => {
     e.preventDefault();
     const formData = {
       email: email,
     };
     onSignUp(formData);
+    // Check if any field is empty
     if (!username || !password || !email || !firstName || !lastName || !phoneNumber) {
       setErrorMessage('Please fill in all fields.');
       return;
@@ -28,19 +26,20 @@ export default function Signup({ onSignUp }) {
 
     const userData = { username, email, password, firstName, lastName, phoneNumber };
 
-    fetch('http://localhost:3004/api/signup', {
+    fetch('http://localhost:3004/api/signupOwners', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json',
+        'Content-Type': 'application/json'
       },
-      body: JSON.stringify(userData),
+      body: JSON.stringify(userData)
     })
-      .then((response) => response.json())
-      .then((data) => {
+      .then(response => response.json())
+      .then(data => {
+        console.log(data);
         onSignUp(email); // Pass the email value to the onSignUp function
-        navigate('/Cars');
+        navigate('/My-Cars');
       })
-      .catch((error) => {
+      .catch(error => {
         console.error('Error:', error);
       });
   };
@@ -49,76 +48,70 @@ export default function Signup({ onSignUp }) {
     setShowPassword(!showPassword);
   };
 
-  const handleLogin = () => {
-    setSignUpForm(false);
+  const handleLogin=()=>{
     navigate('/');
-  };
+  }
 
   return (
     <div>
-      {showSignUpForm ? (
         <div className="background-container">
-          <div className="signup-form">
-            <form onSubmit={handleFormSubmit}>
-              <h1>Sign Up</h1>
-              <input
-                type="text"
-                placeholder="First Name"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
-              /><br /><br />
-              <input
-                type="text"
-                placeholder="Last Name"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
-              /><br /><br />
-              <input
-                type="text"
-                placeholder="Telephone Number"
-                value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
-              /><br /><br />
-              <input
-                type="tel"
-                placeholder="Username"
-                value={username}
-                onChange={(e) => setUsername(e.target.value)}
-              /><br /><br />
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              /><br /><br />
-              <input
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              /><br /><br />
-              <div>
-                <input
-                  type="checkbox"
-                  checked={showPassword}
-                  onChange={togglePasswordVisibility}
-                />
-                <label>Show Password</label>
-              </div>
-              <div>
-              <button type="submit">Signup</button>
-              </div>
-              <p>
-                Already have an account?{' '}
-                <button onClick={handleLogin}>Login</button>
-              </p>
-              {errorMessage && <p className="error">{errorMessage}</p>}
-            </form>
-          </div>
-        </div>
-      ) : (
-        <Login onLogin={handleLogin} />
-      )}
+      <div className="signup-form">
+        <h1>Sign Up</h1>
+    <form onSubmit={handleFormSubmit}>
+      <input
+        type="text"
+        placeholder="First Name"
+        value={firstName}
+        onChange={(e) => setFirstName(e.target.value)}
+      /><br /><br />
+      <input
+        type="text"
+        placeholder="Last Name"
+        value={lastName}
+        onChange={(e) => setLastName(e.target.value)}
+      /><br /><br />
+      <input
+        type="text"
+        placeholder="Telephone Number"
+        value={phoneNumber}
+        onChange={(e) => setPhoneNumber(e.target.value)}
+      /><br /><br />
+      <input
+        type="tel"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+      /><br /><br />
+      <input
+        type="email"
+        placeholder="Email"
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+      /><br /><br />
+      <input
+        type={showPassword ? 'text' : 'password'}
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+      /><br /><br />
+      <div>
+        <input
+          type="checkbox"
+          checked={showPassword}
+          onChange={togglePasswordVisibility}
+        />
+        <label>Show Password</label>
+      </div>
+      {errorMessage && <p className="error">{errorMessage}</p>}
+      <button type="submit">Signup</button>
+      <div>
+        <p>Already have an Account?
+          <button onClick={handleLogin}>Login</button>
+        </p>
+      </div>
+    </form>
+    </div>
+    </div>
     </div>
   );
 }

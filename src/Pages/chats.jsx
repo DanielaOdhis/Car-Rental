@@ -24,7 +24,7 @@ const Chats = () => {
     .then(response => response.json())
     .then(data => {
       chatDataRef.current = data;
-      let testMessage = {"senderId":"1", "message":"broooo", "msg_id":"145645","status":"read","time":"8:11 am"};
+      let testMessage = {senderId:"1", message:"bro, let us get this straight. like why the hell won't you just wrap yourself to the next line like normal people do", "msg_id":"145645","status":"read","time":"8:11 am"};
        console.log("ChatDataRef: ", chatDataRef);
       console.log("Chats: ", chatDataRef.current[0].messages.push(testMessage));
       console.log("Chats: ", chatDataRef.current[0].messages);
@@ -48,8 +48,7 @@ const Chats = () => {
   event.preventDefault();
 }
  //const clientID = "101a";
- const recepientId =
-  queryParams.get('user_Id');
+ const recepientId = queryParams.get('user_Id');
  console.log("Recipient ID:", recepientId);
 
  socket.onmessage=(event) => {
@@ -108,7 +107,7 @@ break;
 event.preventDefault();
 };
 
-    useEffect(() => {
+useEffect(() => {
     const handleEscapeKeyPress = (e) => {
       if (e.key === 'Escape') {
         setShowProfilePopup(false);
@@ -139,7 +138,7 @@ console.log("the recepientId of the clicked chat is: ", recepientId)
       if(chatDataRef.current[chat].userId==recepientId){
         console.log("found the correct chat");
         for (const message in chatDataRef.current[chat].messages){
-    console.log("Current msg status",chatDataRef.current[chat].messages[message].status );     
+    console.log("Current msg status",chatDataRef.current[chat].messages[message].status );
      if(chatDataRef.current[chat].messages[message].status == undefined){
             console.log("the message is",chatDataRef.current[chat].messages[message]);
             const msg_status_update={
@@ -224,7 +223,7 @@ socket.send(JSON.stringify(msg_status_update))
 
             <div className="chat-content">
               <div className="chat-details">
-                <h3 className="username" onClick={() => {
+                <h3 className="username"  onClick={() => {
     console.log('Message clicked-User Id:', chat.userId);
     handleLastMessageClick(chat);
   }}>{chat.username}</h3>
@@ -292,16 +291,18 @@ socket.send(JSON.stringify(msg_status_update))
       <feBlend mode="normal" in2="shape" result="effect1_innerShadow_14_93"/>
     </filter>
   </defs>
-  <text x="10" y="40" fill="black">
-        {message.message}
-      </text>
+  <foreignObject x="10" y="5" width="200" height="100%">
+              <div xmlns="http://www.w3.org/1999/xhtml" >
+                A good example of a paragraph contains a topic sentence, details and a conclusion. 'There are many different kinds of animals that live in China. Tigers and leopards are animals that live in China's forests in the north. In the jungles, monkeys swing in the trees and elephants walk through the brush.
+              </div>
+            </foreignObject>
       <text x="10" y="70" fill="white" className="message-time">
         {message.time}
       </text>
 </svg>
 <div className="circle-container">
 <svg width="30" height="30">
-<circle cx="15" cy="15" r="8" fill={message.status === 'sent' ? 'orange' : message.status == 'delivered' ? 'green' : message.status == 'read' ? 'purple' : 'red'} />
+        <circle cx="15" cy="15" r="8" fill={message.status === 'sent' ? 'orange' : message.status == 'delivered' ? 'green' : message.status == 'read' ? 'purple' : 'red'} />
         <circle cx="15" cy="15" r="10" fill="transparent" stroke="grey" strokeWidth="2" />
       </svg>
     </div>

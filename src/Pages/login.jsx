@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import Signup from './signup';
-import Forgot from './forgotPassword'
-import {  useNavigate } from 'react-router-dom';
+import Forgot from './forgotPassword';
+import { useNavigate } from 'react-router-dom';
 
 export default function Logins({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -19,18 +19,19 @@ export default function Logins({ onLogin }) {
     const formData = {
       email: email,
     };
-    axios.post('http://localhost:3004/api/login', { email, password })
+    axios
+      .post('http://localhost:3004/api/loginOwners', { email, password })
       .then((response) => {
-        console.log(response.data);
         onLogin(formData);
+        navigate('/My-Cars');
         localStorage.setItem('loggedInUser', JSON.stringify(formData.id));
-        navigate('/Cars');
       })
       .catch((error) => {
         console.log(error);
         setError('No Account Found. Please try again.');
       });
   };
+
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
@@ -61,13 +62,17 @@ export default function Logins({ onLogin }) {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-            /><br/><br/>
+            />
+            <br />
+            <br />
             <input
-              type={showPassword ? "text" : "password"}
+              type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-            /><br/><br/>
+            />
+            <br />
+            <br />
             <div>
               <input
                 type="checkbox"
@@ -76,26 +81,28 @@ export default function Logins({ onLogin }) {
               />
               <label>Show Password</label>
             </div>
-            {error && <p className='error'>{error}</p>}
+            {error && <p className="error" key="error-message">{error}</p>}
             <button type="submit">Login</button>
           </form>
-          <div onClick={handleForgot} className="forgot-container">
-            <p>Forgot Password?</p>
+          <div>
+            <div onClick={handleForgot}>
+              <p>Forgot Password?</p>
+            </div>
           </div>
           <div>
             <p>
-               Don't have an account? <button onClick={handleSignup}>Sign up</button>
-             </p>
+              Don't have an account? <button onClick={handleSignup}>Sign up</button>
+            </p>
           </div>
         </div>
         </div>
       ) : (
         <div>
-          <Signup onSignUp={handleSignup} />
+          <Signup onSignup={handleSignup} />
         </div>
       )}
       {showForgot && (
-        <div className="background-container">
+        <div>
           <Forgot onBack={handleForgotLog} />
         </div>
       )}
