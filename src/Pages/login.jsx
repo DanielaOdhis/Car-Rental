@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import Signup from './signup';
 import Forgot from './forgotPassword'
-import {  useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import "../css/login.css";
 
 export default function Logins({ onLogin }) {
   const [email, setEmail] = useState('');
@@ -53,41 +54,41 @@ export default function Logins({ onLogin }) {
     <div>
       {showLoginForm ? (
         <div className="background-container">
-        <div className="login-form">
-          <h1>Login</h1>
-          <form onSubmit={handleFormSubmit}>
-            <input
-              type="email"
-              placeholder="Email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            /><br/><br/>
-            <input
-              type={showPassword ? "text" : "password"}
-              placeholder="Password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-            /><br/><br/>
-            <div>
+          <div className="login-form">
+            <h1>Login</h1>
+            <form onSubmit={handleFormSubmit}>
               <input
-                type="checkbox"
-                checked={showPassword}
-                onChange={togglePasswordVisibility}
-              />
-              <label>Show Password</label>
+                type="email"
+                placeholder="Email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              /><br /><br />
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              /><br /><br />
+              <div>
+                <input
+                  type="checkbox"
+                  checked={showPassword}
+                  onChange={togglePasswordVisibility}
+                />
+                <label>Show Password</label>
+              </div>
+              {error && <p className='error'>{error}</p>}
+              <button type="submit">Login</button>
+            </form>
+            <div onClick={handleForgot} className="forgot-container">
+              <p>Forgot Password?</p>
             </div>
-            {error && <p className='error'>{error}</p>}
-            <button type="submit">Login</button>
-          </form>
-          <div onClick={handleForgot} className="forgot-container">
-            <p>Forgot Password?</p>
+            <div>
+              <p>
+                Don't have an account? <button onClick={handleSignup}>Sign up</button>
+              </p>
+            </div>
           </div>
-          <div>
-            <p>
-               Don't have an account? <button onClick={handleSignup}>Sign up</button>
-             </p>
-          </div>
-        </div>
         </div>
       ) : (
         <div>

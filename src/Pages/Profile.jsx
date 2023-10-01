@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Update from './Update.jsx';
 import { useNavigate } from 'react-router-dom';
+import "../css/profile.css";
 
 export default function Profile() {
   const [profileData, setProfileData] = useState(null);

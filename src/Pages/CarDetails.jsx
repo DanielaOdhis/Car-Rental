@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import BookingDialog from './Booking.jsx';
 import { useNavigate, useLocation } from 'react-router-dom';
+import "../css/car_details.css";
 
 export default function CarDetails() {
   const [carDetails, setCarDetails] = useState(null);
@@ -25,7 +26,7 @@ export default function CarDetails() {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
           },
         });
-        
+
         if (response.data) {
           setOwnerDetails(response.data);
         }
@@ -39,7 +40,7 @@ export default function CarDetails() {
 
   useEffect(() => {
     fetchCarData();
-  }, );
+  },);
 
   const bufferToBase64 = (buffer) => {
     if (!buffer || !buffer.data) {
@@ -84,14 +85,14 @@ export default function CarDetails() {
                 <div className='select'>
                   <p>Location: {carDetails.Location}</p>
                 </div>
-                {ownerDetails && (
+                {/* {ownerDetails && (
                   <div className="hidden">
                     <h2>Owner Details</h2>
                     <p>Owner Name: {ownerDetails.firstName}</p>
                     <p>Email: {ownerDetails.email}</p>
                     <p>Telephone: {ownerDetails.phoneNumber}</p>
                   </div>
-                )}
+                )} */}
               </div>
               <button onClick={handleBackClick}>Back</button>
               <button onClick={handleBookingClick}>Book</button>

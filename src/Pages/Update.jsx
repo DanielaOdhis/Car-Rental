@@ -72,7 +72,7 @@ export default function Update() {
               type="text"
               placeholder="First Name"
               defaultValue={firstName}
-              onChange={(e) => {e.preventDefault();setFirstName(e.target.value)}}
+              onChange={(e) => { e.preventDefault(); setFirstName(e.target.value) }}
             />
             <br />
             <br />
@@ -80,7 +80,7 @@ export default function Update() {
               type="text"
               placeholder="Last Name"
               defaultValue={lastName}
-              onChange={(e) => {e.preventDefault();setLastName(e.target.value)}}
+              onChange={(e) => { e.preventDefault(); setLastName(e.target.value) }}
             />
             <br />
             <br />
@@ -88,7 +88,7 @@ export default function Update() {
               type="text"
               placeholder="Telephone Number"
               defaultValue={phoneNumber}
-              onChange={(e) => {e.preventDefault();setPhoneNumber(e.target.value)}}
+              onChange={(e) => { e.preventDefault(); setPhoneNumber(e.target.value) }}
             />
             <br />
             <br />
@@ -96,7 +96,7 @@ export default function Update() {
               type="tel"
               placeholder="Username"
               defaultValue={username}
-              onChange={(e) => {e.preventDefault();setUsername(e.target.value)}}
+              onChange={(e) => { e.preventDefault(); setUsername(e.target.value) }}
             />
             <br />
             <br />
@@ -107,7 +107,7 @@ export default function Update() {
               type={showPassword ? 'text' : 'password'}
               placeholder="Password"
               defaultValue={password}
-              onChange={(e) => {e.preventDefault();setPassword(e.target.value)}}
+              onChange={(e) => { e.preventDefault(); setPassword(e.target.value) }}
             />
             <br />
             <br />

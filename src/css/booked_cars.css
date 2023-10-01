@@ -1,0 +1,99 @@
+.CarsB {
+  border-radius: 20px;
+  background: rgba(155, 128, 121, 0.20);
+  box-shadow: -38.66666793823242px 38.66666793823242px 38.66666793823242px 0px rgba(155, 128, 121, 0.20) inset, 38.66666793823242px -38.66666793823242px 38.66666793823242px 0px rgba(155, 128, 121, 0.20) inset, 0px 6px 12px 0px rgba(155, 128, 121, 0.75);
+  backdrop-filter: blur(9.666666984558105px);
+}
+
+.back {
+  display: flex;
+  background: url('bg.jpg'), lightgray 50% / cover no-repeat;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  color: white;
+  position: absolute;
+  background-size: cover;
+  top: 0;
+}
+
+.booked-car-details {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  cursor: pointer;
+}
+
+.booked {
+  text-align: center;
+  width: 450px;
+  position: relative;
+  border-radius: 20px;
+  -webkit-border-radius: 20px;
+  -moz-border-radius: 20px;
+  -ms-border-radius: 20px;
+  -o-border-radius: 20px;
+}
+
+.booked img {
+  border-radius: 15px;
+  width: 400px;
+  border: 1px solid #ECD7D7;
+}
+
+.top {
+  position: absolute;
+  top: 23px;
+  left: 0;
+}
+
+.confirmation-modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: black;
+  border: 1 px black;
+  color: white;
+  border-radius: 4px;
+  padding: 20px;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+}
+
+/** are we using this? */
+.confirmation-modal h2 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.confirmation-modal p {
+  margin-bottom: 2rem;
+}
+
+.confirmation-modal button {
+  padding: 0.5rem 1rem;
+  margin-right: 1rem;
+  font-size: 1rem;
+}
+
+.confirmation-modal button:last-of-type {
+  margin-right: 0;
+}
+
+/* .confirmation-modal-content {
+    width: 300px;
+    padding: 1.5rem;
+    background-color: black;
+    color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    text-align: center;
+  } */

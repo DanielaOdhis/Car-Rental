@@ -1,4 +1,3 @@
-
 .signup-form button,
 .login-form button,
 .forgot button {
@@ -30,4 +29,3 @@
 .forgot button:hover {
   background-color: tomato;
 }
-

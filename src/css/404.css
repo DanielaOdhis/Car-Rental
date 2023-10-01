@@ -1,0 +1,19 @@
+.not-found-container {
+  text-align: center;
+  padding: 2rem;
+}
+
+.not-found-container h1 {
+  font-size: 3rem;
+  color: tomato;
+}
+
+.not-found-container p {
+  font-size: 1.5rem;
+  color: #666;
+  margin-top: 1rem;
+}
+
+.not-found-image {
+  height: 330px;
+}

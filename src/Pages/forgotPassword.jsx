@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Login from './login.jsx';
 import { useNavigate } from 'react-router-dom';
+import "../css/forgot_password.css";
 
 export default function Forgot() {
   const [email, setEmail] = useState('');
@@ -8,7 +9,7 @@ export default function Forgot() {
   const [error, setError] = useState('');
   const [showForgot, setShowForgot] = useState(true);
 
-  const navigate= useNavigate();
+  const navigate = useNavigate();
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -31,29 +32,29 @@ export default function Forgot() {
     <div>
       {showForgot ? (
         <div className="background-container">
-        <div className="forgot">
-          <h1>Forgot Password</h1>
-          {isSubmitted ? (
-            <>
-              <p className="success-message">
-                An email with password reset instructions has been sent to your email address.
-              </p>
-              <button onClick={handleLoginClick}>Login</button>
-            </>
-          ) : (
-            <form onSubmit={handleSubmit}>
-              <input
-                type="email"
-                placeholder="Email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <br /><br />
-              {error && <p className="error-message">{error}</p>}
-              <button type="submit">Submit</button>
-            </form>
-          )}
-        </div>
+          <div className="forgot">
+            <h1>Forgot Password</h1>
+            {isSubmitted ? (
+              <>
+                <p className="success-message">
+                  An email with password reset instructions has been sent to your email address.
+                </p>
+                <button onClick={handleLoginClick}>Login</button>
+              </>
+            ) : (
+              <form onSubmit={handleSubmit}>
+                <input
+                  type="email"
+                  placeholder="Email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <br /><br />
+                {error && <p className="error-message">{error}</p>}
+                <button type="submit">Submit</button>
+              </form>
+            )}
+          </div>
         </div>
       ) : (
         <Login onLogin={handleLoginClick} />

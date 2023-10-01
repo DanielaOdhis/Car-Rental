@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import "../css/booking.css";
 
 export default function BookingDialog({ hourlyRate, carId, carData, onBookingClick, isBookingClicked }) {
   const [totalBill, setTotalBill] = useState({hourlyRate});

@@ -13,7 +13,7 @@ export default function Signup({ onSignUp }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [showSignUpForm, setSignUpForm] = useState(true);
 
-  const navigate= useNavigate();
+  const navigate = useNavigate();
 
   const handleFormSubmit = (e) => {
     e.preventDefault();
@@ -35,8 +35,9 @@ export default function Signup({ onSignUp }) {
       },
       body: JSON.stringify(userData),
     })
-      .then((response) => response.json())
+      .then((response) => { response.preventDefault(); response.json() })
       .then((data) => {
+        data.preventDefault();
         onSignUp(email); // Pass the email value to the onSignUp function
         navigate('/Cars');
       })
@@ -65,37 +66,37 @@ export default function Signup({ onSignUp }) {
                 type="text"
                 placeholder="First Name"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => { e.preventDefault(); setFirstName(e.target.value) }}
               /><br /><br />
               <input
                 type="text"
                 placeholder="Last Name"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => { e.preventDefault(); setLastName(e.target.value) }}
               /><br /><br />
               <input
                 type="text"
                 placeholder="Telephone Number"
                 value={phoneNumber}
-                onChange={(e) => setPhoneNumber(e.target.value)}
+                onChange={(e) => { e.preventDefault(); setPhoneNumber(e.target.value) }}
               /><br /><br />
               <input
                 type="tel"
                 placeholder="Username"
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => { e.preventDefault(); setUsername(e.target.value) }}
               /><br /><br />
               <input
                 type="email"
                 placeholder="Email"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) => { e.preventDefault(); setEmail(e.target.value) }}
               /><br /><br />
               <input
                 type={showPassword ? 'text' : 'password'}
                 placeholder="Password"
                 value={password}
-                onChange={(e) => setPassword(e.target.value)}
+                onChange={(e) => { e.preventDefault(); setPassword(e.target.value) }}
               /><br /><br />
               <div>
                 <input
@@ -106,7 +107,7 @@ export default function Signup({ onSignUp }) {
                 <label>Show Password</label>
               </div>
               <div>
-              <button type="submit">Signup</button>
+                <button type="submit">Signup</button>
               </div>
               <p>
                 Already have an account?{' '}

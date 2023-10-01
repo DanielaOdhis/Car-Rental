@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { useNavigate } from 'react-router-dom';
-
+import "../css/booked_cars.css";
 export default function BookedCars() {
   const [bookedCars, setBookedCars] = useState([]);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -12,7 +12,7 @@ export default function BookedCars() {
   const [profileData, setProfileData] = useState(null);
 
   const userId = localStorage.getItem("loggedUser");
-  const navigate=useNavigate();
+  const navigate = useNavigate();
 
   useEffect(() => {
     axios.get(`http://localhost:3004/api/userDetails/${userId}`)
@@ -23,11 +23,11 @@ export default function BookedCars() {
       .catch(error => {
         console.error('Error fetching profile data:', error);
       });
-    if (profileData ) {
+    if (profileData) {
       fetchBookedCars(profileData);
     }
 
-  }, );
+  },);
 
 
   const fetchBookedCars = async (userId) => {
@@ -37,7 +37,7 @@ export default function BookedCars() {
           Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
       });
-      
+
 
       const user = userResponse.data;
 
@@ -50,7 +50,7 @@ export default function BookedCars() {
             const carDetailsResponse = await axios.get(`http://localhost:3004/api/cars/${bookedCar.car_id}`);
             const ownerDetailsResponse = await axios.get(`http://localhost:3004/api/ownerDetails/${carDetailsResponse.data[0].owner_ID}`);
 
-            const total_time=bookedCar.total_time;
+            const total_time = bookedCar.total_time;
             const totalBillValue = (((bookedCar.total_time - 1) * carDetailsResponse.data[0].Charges_Per_Hour).toFixed(2));
             const carDetails = carDetailsResponse.data[0];
 
@@ -170,7 +170,7 @@ export default function BookedCars() {
       }
 
       setShowPaymentOptions(false);
-      bookedCar.totalBillValue=0;
+      bookedCar.totalBillValue = 0;
 
     } catch (error) {
       console.error('Error handling checkout completion:', error);
@@ -181,99 +181,99 @@ export default function BookedCars() {
     setShowPaymentOptions(false);
     setSelectedBooking(null);
   };
-const handleBackClick= () => {
-  setShowPaymentOptions(false);
-  setSelectedBooking(null);
-};
+  const handleBackClick = () => {
+    setShowPaymentOptions(false);
+    setSelectedBooking(null);
+  };
 
-const formatDate = (dateString) => {
-  const formattedDate = new Date(dateString).toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
+  const formatDate = (dateString) => {
+    const formattedDate = new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
 
-  return formattedDate;
-};
+    return formattedDate;
+  };
 
-const formatTime = (timeString) => {
-  const formattedTime = new Date(timeString).toLocaleTimeString("en-US", {
-    hour: "numeric",
-    minute: "numeric",
-    second: "numeric",
-    hour12: true,
-  });
+  const formatTime = (timeString) => {
+    const formattedTime = new Date(timeString).toLocaleTimeString("en-US", {
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    });
 
-  return formattedTime;
-};
+    return formattedTime;
+  };
 
-const handleBack=()=>{
-  navigate('/Cars');
-}
+  const handleBack = () => {
+    navigate('/Cars');
+  }
   return (
     <div className="back">
       {loading ? (
         <div className="loading-container">
-        <p className="loading-spinner">Loading...</p>
+          <p className="loading-spinner">Loading...</p>
         </div>
       ) : bookedCars.length > 0 ? (
         <div>
-      <h1>Booked Cars</h1>
-      <div>
-          {bookedCars.map((booking) => (
-            <div className='booked-car-details'>
-            <div className='booked' key={booking.id}>
-            <div className="CarsB">
-              <h2>{booking.car_details.Car_Type}</h2>
-              <div onClick={() => handleCancelClick(booking)}>
-                <img src={bufferToBase64(booking.car_details.image)} alt={booking.car_details.Car_Type} />
-              </div>
-              <p><b>Owner's User Name</b>: {booking.owner_details.username}</p>
-              <p><b>Owner's Telephone</b>: {booking.owner_details.phoneNumber}</p>
-              <p><b>Booking Date</b>:  {formatDate(booking.booking_date)}</p>
-              <p><b>Pickup Time</b>: {formatTime(booking.pickup_time)}</p>
-              <p><b>Time Elapsed</b>: {formatTimeInHours(booking.total_time * 3600)}</p>
-              <div onClick={() => handleBooking(booking)}>
-                <p><b>Total Bill</b>: {booking.totalBillValue}$</p>
-              </div>
-              </div>
-              {showPaymentOptions && selectedBooking && selectedBooking.id === booking.id && (
-                <div className="paypal-container">
-                  <div className="paypal-buttons">
-                    <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID }}>
-                      <PayPalButtons
-                        createOrder={(data, actions) => {
-                          return actions.order.create({
-                            purchase_units: [
-                              {
-                                amount: {
-                                  currency_code: "USD",
-                                  value: booking.totalBillValue,
-                                },
-                              },
-                            ],
-                          });
-                        }}
-                        onApprove={(data, actions) => {
-                          return actions.order.capture().then((details) => {
-                            console.log("Payment completed:", details);
-                            handleCheckoutComplete();
-                          });
-                        }}
-                        onCancel={handlePaymentCancel}
-                      />
-                    </PayPalScriptProvider>
-                    <button onClick={handleBackClick}>Back</button>
+          <h1>Booked Cars</h1>
+          <div>
+            {bookedCars.map((booking) => (
+              <div className='booked-car-details'>
+                <div className='booked' key={booking.id}>
+                  <div className="CarsB">
+                    <h2>{booking.car_details.Car_Type}</h2>
+                    <div onClick={() => handleCancelClick(booking)}>
+                      <img src={bufferToBase64(booking.car_details.image)} alt={booking.car_details.Car_Type} />
+                    </div>
+                    <p><b>Owner's User Name</b>: {booking.owner_details.username}</p>
+                    <p><b>Owner's Telephone</b>: {booking.owner_details.phoneNumber}</p>
+                    <p><b>Booking Date</b>:  {formatDate(booking.booking_date)}</p>
+                    <p><b>Pickup Time</b>: {formatTime(booking.pickup_time)}</p>
+                    <p><b>Time Elapsed</b>: {formatTimeInHours(booking.total_time * 3600)}</p>
+                    <div onClick={() => handleBooking(booking)}>
+                      <p><b>Total Bill</b>: {booking.totalBillValue}$</p>
+                    </div>
                   </div>
+                  {showPaymentOptions && selectedBooking && selectedBooking.id === booking.id && (
+                    <div className="paypal-container">
+                      <div className="paypal-buttons">
+                        <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID }}>
+                          <PayPalButtons
+                            createOrder={(data, actions) => {
+                              return actions.order.create({
+                                purchase_units: [
+                                  {
+                                    amount: {
+                                      currency_code: "USD",
+                                      value: booking.totalBillValue,
+                                    },
+                                  },
+                                ],
+                              });
+                            }}
+                            onApprove={(data, actions) => {
+                              return actions.order.capture().then((details) => {
+                                console.log("Payment completed:", details);
+                                handleCheckoutComplete();
+                              });
+                            }}
+                            onCancel={handlePaymentCancel}
+                          />
+                        </PayPalScriptProvider>
+                        <button onClick={handleBackClick}>Back</button>
+                      </div>
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
+            ))}
+            <div className='top'>
+              <button onClick={handleBack}>Back</button>
             </div>
-            </div>
-          ))}
-          <div className='top'>
-            <button onClick={handleBack}>Back</button>
           </div>
-        </div>
         </div>
       ) : (
         <div>
@@ -281,7 +281,7 @@ const handleBack=()=>{
           <button onClick={handleBack}>Back</button>
         </div>
       )}
-      {showConfirmation && selectedBooking && selectedBooking.total_time < 0 &&(
+      {showConfirmation && selectedBooking && selectedBooking.total_time < 0 && (
         <div className="confirmation-modal">
           <p>You're about to cancel this order. <br />Are you sure?</p>
           <button onClick={confirmCancel}>Confirm</button>
