@@ -16,10 +16,12 @@ function Cars() {
   const fetchCarData = async () => {
     try {
       const response = await fetch(`http://localhost:3004/api/cars`);
+     
       const data = await response.json();
       setCars(data);
       console.log("Cars:", data);
       setLoading(false);
+      //response.preventDefault();
     } catch (error) {
       console.error('Error Fetching Data', error);
       setLoading(false);
@@ -28,6 +30,7 @@ function Cars() {
 
   const handleCarClick = (car) => {
     setSelectedCar(car);
+    //car.preventDefault();
   };
 
   const bufferToBase64 = (buffer) => {
@@ -103,7 +106,7 @@ function Cars() {
         <div className="grid-container">
           {filteredCars.length > 0 ? (
             filteredCars.map((car, index) => (
-              <div className="grid-item" key={index} onClick={() => handleCarClick(car)}>
+              <div className="grid-item" key={index} onClick={(e) => {console.log(e);handleCarClick(car);}}>
                 <Link to={`/Car-Details?carId=${car.Car_ID}`} key={index} className="link">
                 <h2>{car.Car_Type}</h2>
                 <div className="triangles-container">

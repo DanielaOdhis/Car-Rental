@@ -882,6 +882,15 @@ input {
   font-size: 14px;
 }
 
+.m-message {
+  font-size: 14px;
+  max-width: 100%;
+  min-width: 20%;
+  overflow: hidden;
+ text-overflow: ellipsis;
+ height: 22px;
+}
+
 .sent {
   align-self: flex-end;
 }
@@ -906,6 +915,8 @@ input {
   width: 30%;
   overflow-y: auto;
   border-right: 1px solid #ddd;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .chat-list-content {
@@ -916,6 +927,8 @@ input {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  max-height: 100vh;
+  overflow-y: auto;
 }
 
 .cht {

@@ -40,7 +40,7 @@ const Chats = () => {
     .catch(error => console.error('Error fetching chat data:', error));
 }, []);
 
-  const socket = new WebSocket(`ws://54.173.222.55:9600:9600/ws/${userId}`);
+  const socket = new WebSocket(`ws://54.173.222.55:9600/ws/${userId}`);
   // Connection opened
   socket.onopen=(event)=>{
     socket.send(JSON.stringify(Ids));
@@ -224,9 +224,12 @@ socket.send(JSON.stringify(msg_status_update))
 
             <div className="chat-content">
               <div className="chat-details">
-                <h3 className="username">{chat.username}</h3>
+                <h3 className="username" onClick={() => {
+    console.log('Message clicked-User Id:', chat.userId);
+    handleLastMessageClick(chat);
+  }}>{chat.username}</h3>
                 <p
-                  className={`message ${
+                  className={`m-message ${
                     chat.messages[chat.messages.length - 1].senderId === userId ? 'sent' : 'received'
                   }`}
                 >
@@ -324,7 +327,7 @@ socket.send(JSON.stringify(msg_status_update))
     <text x="10" y="40" fill="white" text-wrap="wrap" >
     <tspan x="10" dy="0"> {message.message}</tspan>
     </text>
-    <text x="10" y="70" fill="white" className="message-time">
+    <text x="25" y="80" fill="white" className="message-time">
         {message.time}
       </text>
   </svg>
