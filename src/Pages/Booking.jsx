@@ -4,24 +4,23 @@ import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import "../css/booking.css";
 
 export default function BookingDialog({ hourlyRate, carId, carData, onBookingClick, isBookingClicked }) {
-  const [totalBill, setTotalBill] = useState({hourlyRate});
+  const [totalBill, setTotalBill] = useState({ hourlyRate });
   const [pickupTime, setPickupTime] = useState('');
   const [bookingDate, setBookingDate] = useState('');
   const [showPaymentOptions, setShowPaymentOptions] = useState(false);
-  const userId=localStorage.getItem("loggedUser")
+  const userId = localStorage.getItem("loggedUser")
   const handleCheckoutComplete = () => {
     const formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
     setTotalBill(hourlyRate);
 
-    // add code to update the availability status here
-          try {
-             axios.put(`http://localhost:3004/api/cars/${carData.Car_ID}`, {
-              Rental_Status: 'Unavailable',
-            });
-            console.log('Availability status updated successfully.');
-          } catch (error) {
-            console.error('Error updating availability status:', error);
-          }
+    try {
+      axios.put(`http://localhost:3004/api/cars/${carData.Car_ID}`, {
+        Rental_Status: 'Unavailable',
+      });
+      console.log('Availability status updated successfully.');
+    } catch (error) {
+      console.error('Error updating availability status:', error);
+    }
     setShowPaymentOptions(false);
     axios.post('http://localhost:3004/api/bookings', {
       pickup_time: formattedPickupTime,
@@ -44,7 +43,7 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
   };
   const handleBookClick = async () => {
     const response = await axios.get(`http://localhost:3004/api/userDetails`);
-    const res= response.data;
+    const res = response.data;
     console.log("prof:", res);
     if (!pickupTime || !bookingDate) {
       console.error('Missing required data for booking');
@@ -93,7 +92,6 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
       formData.append('car_id', car[0].Car_ID);
       formData.append('owner_id', car[0].owner_ID);
 
-      // formattedPickupTime = `${bookingDate} ${pickupTime}:00`;
       setTotalBill(hourlyRate);
       const createOrderData = {
         cars: {
@@ -105,7 +103,6 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
         .then((orderResponse) => {
           console.log(orderResponse.data);
           setShowPaymentOptions(true);
-         // window.location.href = `https://www.sandbox.paypal.com/checkoutnow?token=${orderID}`;
         })
         .catch((error) => {
           console.error('Error creating PayPal order:', error);
@@ -147,7 +144,7 @@ export default function BookingDialog({ hourlyRate, carId, carData, onBookingCli
         <div className="paypal-container">
           <div className="paypal-buttons">
             <h2>Total Bill: {totalBill}$</h2>
-            <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID}}>
+            <PayPalScriptProvider options={{ "client-id": process.env.REACT_APP_CLIENT_ID }}>
               <PayPalButtons
                 createOrder={(data, actions) => {
                   return actions.order.create({
